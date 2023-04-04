@@ -1,0 +1,10 @@
+---
+- name: Make Datasaker Directory
+  ansible.builtin.file:
+    path: "{{ item }}"
+    state: directory
+    recurse: yes
+    owner: root
+    group: root
+  with_items:
+    - /etc/datasaker

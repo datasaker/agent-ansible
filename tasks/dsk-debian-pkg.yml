@@ -1,0 +1,76 @@
+---
+# - name: test
+#   debug:
+#     msg: "{{ item }}"
+#   with_items:
+#     - "{{ datagate_trace_url }}"
+#     - "{{ datagate_trace_port }}"
+#     - "{{ datagate_trace_timeout }}"
+#     - "{{ datagate_manifes_url }}"
+#     - "{{ datagate_manifest_port }}"
+#     - "{{ datagate_manifest_timeout }}"
+#     - "{{ datagate_metric_url }}"
+#     - "{{ datagate_metric_port }}"
+#     - "{{ datagate_metric_timeout }}"
+#     - "{{ datagate_plan_url }}"
+#     - "{{ datagate_plan_port }}"
+#     - "{{ datagate_plan_timeout }}"
+#     - "{{ datagate_loggate_url }}"
+#     - "{{ datagate_loggate_port }}"
+#     - "{{ datagate_loggate_timeout }}"
+#     - "{{ datasaker_api_url }}"
+#     - "{{ datasaker_api_send_interval }}"
+
+- name: "Setting global-config"
+  template:
+    src: global-config.yml.j2
+    dest: "/etc/datasaker/global-config.yml"
+
+- name: "Create temporary directory for key manipulation"
+  tempfile:
+    state: directory
+    suffix: keys
+  register: tempdir
+
+- name: "download keyring then add key to keyring"
+  get_url:
+    url: "{{ dsk_public_gpg_key }}"
+    dest: "{{ tempdir.path }}/datasaker.gpg.key"
+    force: yes
+
+- name: "Ensure downloaded file for {{ key_fingerprint }} is a binary keyring"
+  shell: "cat {{ tempdir.path }}/datasaker.gpg.key | sudo gpg --import --batch --no-default-keyring --keyring {{ apt_usr_share_keyring }}"
+
+- name: "copy keyring to trusted keyring"
+  copy:
+    src: "{{ apt_usr_share_keyring }}"
+    dest: "{{ apt_trusted_d_keyring }}"
+    mode: "0600"
+    remote_src: yes
+
+- name: "Remove temporary directory for key manipulation"
+  file:
+    path: "{{ tempdir.path }}"
+    state: absent
+
+      #- name: Import datasaker GPG key
+      #  apt_key:
+      #    url: https://dsk-agent-s3.s3.ap-northeast-2.amazonaws.com/dsk-agent-s3/public/public.gpg.key
+      #    state: present
+      #  become: true
+
+- name: Add datasaker repository
+  apt_repository:
+    repo: "deb [signed-by={{ apt_usr_share_keyring }}] https://nexus.exem-oss.org/repository/debian-repos/ ubuntu main"
+    state: present
+    filename: datasaker.list
+
+- name: Install required packages
+  apt:
+    name: "{{ item }}"
+    state: present
+    update_cache: yes
+  with_items:
+    - "{{ datasaker_agents }}"
+  notify:
+    - Restart {{ item }} service

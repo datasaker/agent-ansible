@@ -1,0 +1,12 @@
+---
+- name: Include Gather Ansible Facts task on Ansible >= 2.10
+  include_tasks: gather-facts.yml
+  when: ansible_version.major >= 2 and ansible_version.minor >= 10
+
+- name: Include Datasaker Add Repository
+  include_tasks: dsk-common.yml
+  when: ansible_facts.os_family == "Debian"
+
+- name: Include Datasaker Host Agent Install
+  include_tasks: dsk-debian-pkg.yml
+  when: ansible_facts.os_family == "Debian"
