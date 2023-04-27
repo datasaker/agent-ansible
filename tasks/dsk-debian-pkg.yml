@@ -40,6 +40,22 @@
 - name: "Check datasaker Agent"
   include_tasks: check-agent.yml
 
+- name: "Install metric sidecar"
+  apt:
+    name: "dsk-metric-sidecar"
+    state: present
+    update_cache: yes
+
+- name: Make Datasaker Log Directory
+  ansible.builtin.file:
+    path: "/var/log/datasaker/{{ item }}"
+    state: directory
+    recurse: yes
+    owner: root
+    group: root
+  with_items:
+    - "{{ datasaker_agents }}"
+
 - name: "Install datasaker agent"
   apt:
     name: "{{ item }}"
@@ -48,6 +64,7 @@
   with_items:
     - "{{ datasaker_agents }}"
   notify:
+    - Reload systemd configuration
     - Restart {{ item }} service
 
 # - name: "Ensure datasaker agent is running"

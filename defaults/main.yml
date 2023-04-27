@@ -29,6 +29,7 @@ apt_usr_share_keyring: "/usr/share/keyrings/datasaker-archive-keyring.gpg"
 
 dsk_public_gpg_key: "https://dsk-agent-s3.s3.ap-northeast-2.amazonaws.com/dsk-agent-s3/public/public.gpg.key"
 
-
 datasaker_agents: []
 
+uninstall: False
+datasaker_clean: False

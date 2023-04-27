@@ -8,3 +8,8 @@
     group: root
   with_items:
     - /etc/datasaker
+
+- name: "Setting global-config"
+  template:
+    src: global-config.yml.j2
+    dest: "/etc/datasaker/global-config.yml"

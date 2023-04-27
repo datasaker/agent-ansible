@@ -5,8 +5,12 @@
 
 - name: Include Datasaker Add Repository
   include_tasks: dsk-common.yml
-  when: ansible_facts.os_family == "Debian"
+  when: uninstall == False and ansible_facts.os_family == "Debian"
 
 - name: Include Datasaker Host Agent Install
   include_tasks: dsk-debian-pkg.yml
-  when: ansible_facts.os_family == "Debian"
+  when: uninstall == False and ansible_facts.os_family == "Debian"
+
+- name: Uninstall Datasaker Agent
+  include_tasks: remove-datasaker.yml
+  when: uninstall == True
