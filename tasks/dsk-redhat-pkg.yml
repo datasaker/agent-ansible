@@ -1,0 +1,40 @@
+---
+- name: "Setting global-config"
+  template:
+    src: global-config.yml.j2
+    dest: "/etc/datasaker/global-config.yml"
+
+- name: "Add datasaker repository"
+  yum_repository:
+    name: datasaker
+    description: datasaker-repo
+    baseurl: "{{ datasaker_yum_repo }}"
+    enabled: "{{ datasaker_yum_enabled }}"
+    gpgcheck: "{{ datasaker_yum_gpgcheck }}"
+
+- set_fact:
+    datasaker_agents: "{{ datasaker_agents | reject('equalto', 'dsk-log-agent') | list }}"
+
+- name: "Check datasaker Agent"
+  include_tasks: check-agent.yml
+
+- name: Make Datasaker Log Directory
+  ansible.builtin.file:
+    path: "/var/log/datasaker/{{ item }}"
+    state: directory
+    recurse: yes
+    owner: root
+    group: root
+  with_items:
+    - "{{ datasaker_agents }}"
+
+- name: "Install datasaker agent"
+  yum:
+    name: "{{ item }}"
+    state: present
+    update_cache: yes
+  with_items:
+    - "{{ datasaker_agents }}"
+  notify:
+    - Reload systemd configuration
+    - Restart {{ item }} service

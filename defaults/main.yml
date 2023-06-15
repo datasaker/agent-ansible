@@ -24,6 +24,10 @@ datagate_loggate_timeout: 5s
 datasaker_api_url: api.kr.datasaker.io
 datasaker_api_send_interval: 1m
 
+datasaker_yum_repo: "http://nexus.exem-oss.org/repository/datasaker-amazonlinux-2023"
+datasaker_yum_enabled: yes
+datasaker_yum_gpgcheck: no
+
 apt_trusted_d_keyring: "/etc/apt/trusted.gpg.d/datasaker-archive-keyring.gpg"
 apt_usr_share_keyring: "/usr/share/keyrings/datasaker-archive-keyring.gpg"
 
