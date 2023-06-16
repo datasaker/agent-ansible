@@ -1,10 +1,4 @@
 ---
-# - name: "Install metric sidecar"
-#   apt:
-#     name: "dsk-metric-sidecar"
-#     state: present
-#     update_cache: yes
-
 - name: Remove Datasaker Log Directory
   ansible.builtin.file:
     path: "/var/log/datasaker/{{ item }}"
@@ -51,4 +45,7 @@
   with_items:
     - /etc/datasaker
     - /var/log/datasaker
+    - "{{ apt_sources_list }}"
+    - "{{ apt_trusted_d_keyring }}"
+    - "{{ apt_usr_share_keyring }}"
   when: datasaker_clean == True

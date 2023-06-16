@@ -16,6 +16,13 @@
     dest: "{{ tempdir.path }}/datasaker.gpg.key"
     force: yes
 
+- name: "Create {{ apt_usr_share_keyring }} if it doesn't exist"
+  file:
+    path: "{{ apt_usr_share_keyring }}"
+    state: touch
+    mode: "0644"
+  changed_when: False
+
 - name: "Ensure downloaded file for binary keyring"
   shell: "cat {{ tempdir.path }}/datasaker.gpg.key | sudo gpg --import --batch --no-default-keyring --keyring {{ apt_usr_share_keyring }}"
 
@@ -23,7 +30,7 @@
   copy:
     src: "{{ apt_usr_share_keyring }}"
     dest: "{{ apt_trusted_d_keyring }}"
-    mode: "0600"
+    mode: "0644"
     remote_src: yes
 
 - name: "Remove temporary directory for key manipulation"
@@ -35,7 +42,7 @@
   apt_repository:
     repo: "deb [signed-by={{ apt_usr_share_keyring }}] https://nexus.exem-oss.org/repository/debian-repos/ ubuntu main"
     state: present
-    filename: datasaker.list
+    filename: datasaker
 
 - name: "Check datasaker Agent"
   include_tasks: check-agent.yml
@@ -45,6 +52,7 @@
     name: "dsk-metric-sidecar"
     state: present
     update_cache: yes
+    force: yes
 
 - name: Make Datasaker Log Directory
   ansible.builtin.file:
@@ -66,12 +74,3 @@
   notify:
     - Reload systemd configuration
     - Restart {{ item }} service
-
-# - name: "Ensure datasaker agent is running"
-#   service:
-#     name: "{{ item }}"
-#     state: started
-#     enabled: yes
-#   with_items:
-#     - "{{ datasaker_agents }}"    
-
