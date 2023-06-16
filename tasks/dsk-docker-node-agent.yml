@@ -1,0 +1,69 @@
+---
+- name: "Create datasaker group"
+  ansible.builtin.group:
+    name: "{{datasaker_docker_group}}"
+    gid: "{{datasaker_docker_user_gid}}"
+    state: present
+
+- name: "Create datasaker user"
+  block:
+    - ansible.builtin.user:
+        name: "{{datasaker_docker_user}}"
+        uid: "{{datasaker_docker_user_uid}}"
+        group: "{{datasaker_docker_group}}"
+        shell: /usr/sbin/nologin
+        system: yes
+        state: present
+  rescue:
+    - ansible.builtin.shell: "sudo useradd -r -u {{datasaker_docker_user_uid}} -g {{datasaker_docker_group}} -s /usr/sbin/nologin {{datasaker_docker_user}}"
+  ignore_errors: true
+
+- name: "Create datasaker local directory"
+  ansible.builtin.file:
+    path: "{{ item }}"
+    state: directory
+    owner: "{{datasaker_docker_user}}"
+    group: "{{datasaker_docker_group}}"
+    mode: '0755'
+  with_items:
+    - "{{ datasaker_docker_path }}/agent/dsk-container-agent"
+    - "{{ datasaker_docker_path }}/agent/dsk-node-agent"
+    - "{{ datasaker_docker_path }}/log"
+
+
+- name: "Run Datasaker Container Agent"
+  ansible.builtin.docker_container:
+    name: dsk-container-agent
+    image: "datasaker/dsk-container-agent:{{ container_agent_image_tag }}"
+    state: started
+    restart_policy: "{{ container_agent_restart_policy }}"
+    privileged: yes
+    env:
+      DSK_CLUSTER_ID: "{{ VAR_CLUSTER_ID }}"
+      GOMAXPROCS: '1'
+      DSK_LOG_LEVEL: "{{ container_agent_log_level }}"
+    volumes:
+      - "{{ datasaker_docker_path }}:/var/datasaker/"
+      - "/:/rootfs/:ro"
+      - "/var/run/:/var/run/:ro"
+      - "/sys/:/sys/:ro"
+      - "/dev/disk/:/dev/disk/:ro"
+      - "{{ datasaker_docker_global_config }}:/etc/datasaker/global-config.yml:ro"
+
+- name: "Run Datasaker Node Agent"
+  ansible.builtin.docker_container:
+    name: dsk-node-agent
+    image: "datasaker/dsk-node-agent:{{ node_agent_image_tag }}"
+    state: started
+    restart_policy: "{{ node_agent_restart_policy }}"
+    privileged: yes
+    network_mode: host
+    pid_mode: host
+    env:
+      DSK_CLUSTER_ID: "{{ VAR_CLUSTER_ID }}"
+      DSK_LOG_LEVEL: "{{ node_agent_log_level }}"
+    volumes:
+      - "{{ datasaker_docker_path }}:/var/datasaker/"
+      - "/proc/:/host/proc/:ro"
+      - "/sys/:/host/sys/:ro"
+      - "{{ datasaker_docker_global_config }}:/etc/datasaker/global-config.yml:ro"

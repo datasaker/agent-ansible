@@ -8,8 +8,33 @@
     group: root
   with_items:
     - /etc/datasaker
+  when:
+  - ansible_facts.os_family in ["Debian", "RedHat"]
+  - datasaker_agents
 
 - name: "Setting global-config"
   template:
     src: global-config.yml.j2
     dest: "/etc/datasaker/global-config.yml"
+  when:
+  - ansible_facts.os_family in ["Debian", "RedHat"]
+  - datasaker_agents
+
+- name: "Make Datasaker Directory"
+  ansible.builtin.file:
+    path: "{{ item }}"
+    state: directory
+    recurse: yes
+    owner: root
+    group: root
+  with_items:
+    - "{{ datasaker_docker_config_path }}"
+  when:
+  - datasaker_docker_agents
+
+- name: "Setting global-config"
+  template:
+    src: global-config.yml.j2
+    dest: "{{ datasaker_docker_global_config }}"
+  when:
+  - datasaker_docker_agents

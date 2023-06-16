@@ -1,0 +1,32 @@
+---
+- name: "Create datasaker local directory"
+  ansible.builtin.file:
+    path: "{{ item }}"
+    state: directory
+    owner: "{{datasaker_docker_user}}"
+    group: "{{datasaker_docker_group}}"
+    mode: '0755'
+  with_items:
+    - "{{ datasaker_docker_path }}/agent/dsk-trace-agent"
+
+- name: "Setting dsk-trace-agent config"
+  template:
+    src: trace-agent-config.yml.j2
+    dest: "{{ datasaker_docker_path }}/trace-agent-config.yml"
+
+- name: "Run Datasaker trace Agent"
+  ansible.builtin.docker_container:
+    name: dsk-trace-agent
+    image: "datasaker/dsk-trace-agent:{{ trace_agent_image_tag }}"
+    state: started
+    restart_policy: "{{ trace_agent_restart_policy }}"
+    detach: yes
+    published_ports:
+      - 4317:4317/tcp
+      - 4318:4318/tcp    
+    env:
+      DKS_LOG_LEVEL: "{{ trace_agent_log_level }}"
+    volumes:
+      - "{{ datasaker_docker_path }}:/var/datasaker/"
+      - "{{ datasaker_docker_global_config }}:/etc/datasaker/global-config.yml:ro"
+      - "{{ datasaker_docker_path }}/trace-agent-config.yml:/etc/datasaker/dsk-trace-agent/agent-config.yml:ro"

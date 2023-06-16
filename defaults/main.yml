@@ -36,5 +36,35 @@ dsk_public_gpg_key: "https://dsk-agent-s3.s3.ap-northeast-2.amazonaws.com/dsk-ag
 
 datasaker_agents: ['dsk-node-agent']
 
+datasaker_docker_agents: ['dsk-docker-node-agent']
+
+datasaker_docker_config_path: "~/.datasaker"
+datasaker_docker_global_config: "{{ datasaker_docker_config_path }}/config.yml"
+
+datasaker_docker_path: "/var/datasaker"
+datasaker_docker_user: "datasaker"
+datasaker_docker_group: "datasaker"
+datasaker_docker_user_uid: 202306
+datasaker_docker_user_gid: 202306
+VAR_CLUSTER_ID: "unknown_cluster"
+
+container_agent_image_tag: "latest"
+node_agent_image_tag: "latest"
+trace_agent_image_tag: "latest"
+log_agent_image_tag: "latest"
+postgres_agent_image_tag: "latest"
+
+container_agent_restart_policy: "always"
+node_agent_restart_policy: "always"
+trace_agent_restart_policy: "always"
+log_agent_restart_policy: "always"
+postgres_agent_restart_policy: "always"
+
+container_agent_log_level: "INFO"
+node_agent_log_level: "INFO"
+trace_agent_log_level: "INFO"
+log_agent_log_level: "INFO"
+postgres_agent_log_level: "INFO"
+
 uninstall: False
 datasaker_clean: False

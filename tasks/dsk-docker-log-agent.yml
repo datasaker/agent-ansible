@@ -1,0 +1,31 @@
+---
+- name: "Create datasaker local directory"
+  ansible.builtin.file:
+    path: "{{ item }}"
+    state: directory
+    owner: "{{datasaker_docker_user}}"
+    group: "{{datasaker_docker_group}}"
+    mode: '0755'
+  with_items:
+    - "{{ datasaker_docker_path }}/agent/dsk-log-agent"
+
+- name: "Setting dsk-log-agent config"
+  template:
+    src: log-agent-config.yml.j2
+    dest: "{{ datasaker_docker_path }}/log-agent-config.yml"
+
+- name: Run Datasaker Log Agent
+  docker_container:
+    name: dsk-log-agent
+    image: "datasaker/dsk-log-agent:{{ trace_agent_image_tag }}"
+    state: started
+    detach: true
+    restart_policy: always
+    env:
+      DKS_LOG_LEVEL: "{{ log_agent_log_level }}"
+    command: "-global.config=/etc/datasaker/global-config.yml -agent.config=/etc/datasaker/dsk-log-agent/agent-config.yml -mount.volume=true"
+    volumes:
+      - "{{ datasaker_docker_path }}:/var/datasaker/"
+      - "/var/lib/docker/containers/:/var/datasaker/log/:ro"
+      - "{{ datasaker_docker_global_config }}:/etc/datasaker/global-config.yml:ro"
+      - "{{ datasaker_docker_path }}/log-agent-config.yml:/etc/datasaker/dsk-log-agent/agent-config.yml:ro"

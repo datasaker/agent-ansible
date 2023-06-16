@@ -1,20 +1,48 @@
 ---
-- name: Check dsk-node-agent
+- name: "Check dsk-node-agent"
   include_tasks: dsk-node-agent.yml
   when: '"dsk-node-agent" in datasaker_agents'
 
-- name: Check dsk-trace-agent
+- name: "Check dsk-trace-agent"
   include_tasks: dsk-trace-agent.yml
   when: '"dsk-trace-agent" in datasaker_agents'
 
-- name: Check dsk-log-agent
+- name: "Check dsk-log-agent"
   include_tasks: dsk-log-agent.yml
   when: '"dsk-log-agent" in datasaker_agents'
 
-- name: Check dsk-postgres-agent
+- name: "Check dsk-postgres-agent"
   include_tasks: dsk-postgres-agent.yml
   when: '"dsk-postgres-agent" in datasaker_agents'
 
-- name: Check dsk-plan-postgres-agent
+- name: "Check dsk-plan-postgres-agent"
   include_tasks: dsk-plan-postgres-agent.yml
   when: '"dsk-plan-postgres-agent" in datasaker_agents'
+
+- name: "Check dsk-docker-node-agent"
+  include_tasks: dsk-docker-node-agent.yml
+  when: '"dsk-docker-node-agent" in datasaker_docker_agents'
+
+- name: "Check dsk-docker-elasticsearch-agent"
+  include_tasks: dsk-docker-elasticsearch-agent.yml
+  when: '"dsk-docker-elasticsearch-agent" in datasaker_docker_agents'
+
+- name: "Check dsk-docker-log-agent"
+  include_tasks: dsk-docker-log-agent.yml
+  when: '"dsk-docker-log-agent" in datasaker_docker_agents'
+
+- name: "Check dsk-docker-mongo-agent"
+  include_tasks: dsk-docker-mongo-agent.yml
+  when: '"dsk-docker-mongo-agent" in datasaker_docker_agents'
+
+- name: "Check dsk-docker-mysql-agent"
+  include_tasks: dsk-docker-mysql-agent.yml
+  when: '"dsk-docker-mysql-agent" in datasaker_docker_agents'
+
+- name: "Check dsk-docker-postgres-agent"
+  include_tasks: dsk-docker-postgres-agent.yml
+  when: '"dsk-docker-postgres-agent" in datasaker_docker_agents'
+
+- name: "Check dsk-docker-trace-agent"
+  include_tasks: dsk-docker-trace-agent.yml
+  when: '"dsk-docker-trace-agent" in datasaker_docker_agents'
