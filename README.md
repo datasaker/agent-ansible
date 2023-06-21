@@ -141,7 +141,11 @@ To deploy the Datasaker Agent on hosts, add the Datasaker role and your API key 
     - role: dsk_bot.datasaker
   vars:
     datasaker_api_key: "<YOUR_API_KEY>"
-    datasaker_docker_agents: ["dsk-docker-node-agent","dsk-docker-trace-agent","dsk-docker-log-agent","dsk-docker-postgres-agent"]
+    datasaker_docker_agents:
+      - "dsk-docker-node-agent"
+      - "dsk-docker-trace-agent"
+      - "dsk-docker-log-agent"
+      - "dsk-docker-postgres-agent"
     postgres_user_name: sample
     postgres_user_password: 1q2w3e4r
     postgres_database_address: 0.0.0.0
