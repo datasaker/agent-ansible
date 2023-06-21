@@ -10,9 +10,14 @@
     - "{{ datasaker_docker_path }}/agent/dsk-postgres-agent"
     - "{{ datasaker_docker_path }}/agent/dsk-plan-postgres-agent"
 
+- name: "Touch agent config"
+  ansible.builtin.file:
+    path: "{{ datasaker_docker_path }}/dsk-postgres-config.yml"
+    state: touch
+
 - name: "Setting dsk-postgres-agent config"
   template:
-    src: postgres-agent-config.yml.j2
+    src: docker-postgres-agent-config.yml.j2
     dest: "{{ datasaker_docker_path }}/dsk-postgres-config.yml"
 
 - name: "Setting plan-dsk-postgres-agent config"
@@ -22,10 +27,10 @@
 
 - name: "Run dsk-postgres-agent container"
   docker_container:
-    name: dsk-postgres-agent
-    image: datasaker/dsk-postgres-agent:rel0.1.2
+    name: dsk-docker-postgres-agent
+    image: "datasaker/dsk-postgres-agent:{{ postgres_agent_image_tag }}"
     state: started
-    restart_policy: always
+    restart_policy: "{{ postgres_agent_restart_policy }}"
     detach: true
     env:
       DKS_LOG_LEVEL: "info"
@@ -39,10 +44,10 @@
 
 - name: "Run dsk-plan-postgres-agent container"
   docker_container:
-    name: dsk-plan-postgres-agent
-    image: datasaker/dsk-plan-postgres-agent:latest
+    name: dsk-docker-plan-postgres-agent
+    image: "datasaker/dsk-plan-postgres-agent:{{ plan_postgres_agent_image_tag }}"
     state: started
-    restart_policy: always
+    restart_policy: "{{ plan_postgres_agent_restart_policy }}"
     detach: true
     env:
       DKS_LOG_LEVEL: "info"

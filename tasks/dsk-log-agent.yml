@@ -4,8 +4,6 @@
     path: "/etc/datasaker/{{ item }}"
     state: directory
     recurse: yes
-    owner: root
-    group: root
   with_items:
     - "dsk-log-agent"
 

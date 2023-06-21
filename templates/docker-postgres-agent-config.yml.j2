@@ -1,6 +1,6 @@
 agent:
   metadata:
-    agent_name: "{{ docker_postgres_agent_name | default('dsk-postgres-agent') }}"
+    agent_name: "{{ docker_postgres_agent_name | default('dsk-docker-postgres-agent') }}"
   option:
     exporter_config:
       command: "/etc/datasaker/target-exporter"

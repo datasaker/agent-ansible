@@ -25,10 +25,15 @@
     path: "{{ item }}"
     state: directory
     recurse: yes
-    owner: root
-    group: root
   with_items:
     - "{{ datasaker_docker_config_path }}"
+  when:
+  - datasaker_docker_agents
+
+- name: "Touch agent config"
+  ansible.builtin.file:
+    path: "{{ datasaker_docker_global_config }}"
+    state: touch
   when:
   - datasaker_docker_agents
 

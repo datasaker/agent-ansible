@@ -54,18 +54,21 @@ node_agent_image_tag: "latest"
 trace_agent_image_tag: "latest"
 log_agent_image_tag: "latest"
 postgres_agent_image_tag: "latest"
+plan_postgres_agent_image_tag: "latest"
 
 container_agent_restart_policy: "always"
 node_agent_restart_policy: "always"
 trace_agent_restart_policy: "always"
 log_agent_restart_policy: "always"
 postgres_agent_restart_policy: "always"
+plan_postgres_agent_restart_policy: "always"
 
 container_agent_log_level: "INFO"
 node_agent_log_level: "INFO"
 trace_agent_log_level: "INFO"
 log_agent_log_level: "INFO"
 postgres_agent_log_level: "INFO"
+plan_postgres_agent_log_level: "INFO"
 
 uninstall: False
 datasaker_clean: False

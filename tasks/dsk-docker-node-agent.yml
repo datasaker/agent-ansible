@@ -33,7 +33,7 @@
 
 - name: "Run Datasaker Container Agent"
   ansible.builtin.docker_container:
-    name: dsk-container-agent
+    name: dsk-docker-container-agent
     image: "datasaker/dsk-container-agent:{{ container_agent_image_tag }}"
     state: started
     restart_policy: "{{ container_agent_restart_policy }}"
@@ -52,7 +52,7 @@
 
 - name: "Run Datasaker Node Agent"
   ansible.builtin.docker_container:
-    name: dsk-node-agent
+    name: dsk-docker-node-agent
     image: "datasaker/dsk-node-agent:{{ node_agent_image_tag }}"
     state: started
     restart_policy: "{{ node_agent_restart_policy }}"

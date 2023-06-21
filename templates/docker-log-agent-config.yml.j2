@@ -5,7 +5,7 @@ agent:
 {% for collect_item in log_collects %}
     - paths:
 {% for path in collect_item.paths %}
-        - "{{ path | default('/var/log/*.log') }}"
+        - "{{ path | default('/var/log/sample/*/*.log') }}"
 {% endfor %}
 {% if collect_item.exclude_paths is defined %}
       exclude_paths:

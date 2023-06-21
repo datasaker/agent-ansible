@@ -5,6 +5,8 @@
     state: absent
   with_items:
     - "{{ datasaker_agents }}"
+  when: 
+    - datasaker_agents
 
 - name: Remove Datasaker Agent Directory
   ansible.builtin.file:
@@ -12,6 +14,8 @@
     state: absent
   with_items:
     - "{{ datasaker_agents }}"
+  when: 
+    - datasaker_agents
 
 - name: Stop agent service
   service:
@@ -20,6 +24,8 @@
     state: stopped
   with_items:
     - "{{ datasaker_agents }}"
+  when: 
+    - datasaker_agents
   ignore_errors: true
 
 - name: "Uninstall datasaker agent"
@@ -29,6 +35,27 @@
     update_cache: yes
   with_items:
     - "{{ datasaker_agents }}"
+  when: 
+    - datasaker_agents
+  ignore_errors: true
+
+- name: Stop the Docker container
+  docker_container:
+    name: "{{ item }}"
+    state: absent
+  with_items:
+    - "dsk-docker-container-agent"
+    - "{{ datasaker_docker_agents }}"
+  when: 
+    - datasaker_docker_agents
+  ignore_errors: true
+
+- name: Stop the Docker plan-postgres-agent container
+  docker_container:
+    name: "dsk-docker-plan-postgres-agent"
+    state: absent
+  when:
+    - '"dsk-docker-postgres-agent" in datasaker_docker_agents'
   ignore_errors: true
 
 - name: Remove Datasaker Agent Directory
@@ -37,6 +64,8 @@
     state: absent
   with_items:
     - "{{ datasaker_agents }}"
+  when: 
+    - datasaker_agents
 
 - name: Remove Datasaker All Directory
   ansible.builtin.file:
@@ -46,32 +75,40 @@
     - /etc/datasaker
     - /var/log/datasaker
     - /var/datasaker
-    - ~/.datasaker
     - "{{ apt_sources_list }}"
     - "{{ apt_trusted_d_keyring }}"
     - "{{ apt_usr_share_keyring }}"
-  when: datasaker_clean == True
+  when:
+    - datasaker_clean == True
+    - datasaker_agents
 
 - name: "Remove datasaker_docker_user"
   ansible.builtin.user:
     name: "{{datasaker_docker_user}}"
     state: absent
-  when: datasaker_clean == True
+  when: 
+    - datasaker_clean == True
+    - datasaker_docker_agents
   ignore_errors: yes
 
 - name: "Remove datasaker_docker_group"
   ansible.builtin.group:
     name: "{{datasaker_docker_group}}"
     state: absent
-  when: datasaker_clean == True
+  when: 
+    - datasaker_clean == True
+    - datasaker_docker_agents
   ignore_errors: yes
 
 - name: "Remove datasaker_docker_directory"
   ansible.builtin.file:
     name: "{{ item }}"
     state: absent
-  when: datasaker_clean == True
-  ignore_errors: yes
   with_items:
     - "{{ datasaker_docker_config_path }}"
     - "{{ datasaker_docker_path }}"
+  when: 
+    - datasaker_clean == True
+    - datasaker_docker_agents
+  ignore_errors: yes
+
