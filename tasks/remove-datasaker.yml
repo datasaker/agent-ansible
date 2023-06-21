@@ -65,3 +65,13 @@
     state: absent
   when: datasaker_clean == True
   ignore_errors: yes
+
+- name: "Remove datasaker_docker_directory"
+  ansible.builtin.file:
+    name: "{{ item }}"
+    state: absent
+  when: datasaker_clean == True
+  ignore_errors: yes
+  with_items:
+    - "{{ datasaker_docker_config_path }}"
+    - "{{ datasaker_docker_path }}"

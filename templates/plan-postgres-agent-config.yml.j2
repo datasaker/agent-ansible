@@ -1,7 +1,6 @@
 agent:
   metadata:
     agent_name: "{{ plan_postgres_agent_name | default('dsk-plan-postgres-agent') }}"
-    cluster_id: "{{ plan_postgres_agent_cluster_id | default('REPLACE_CLUSTER_ID') }}"
   data_source_name:
     user: "{{ plan_postgres_user_name | default('') }}"
     password: "{{ plan_postgres_user_password | default('') }}"

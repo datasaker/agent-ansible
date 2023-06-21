@@ -1,2 +1,52 @@
 ---
+- name: "Create datasaker local directory"
+  ansible.builtin.file:
+    path: "{{ item }}"
+    state: directory
+    owner: "{{datasaker_docker_user}}"
+    group: "{{datasaker_docker_group}}"
+    mode: '0755'
+  with_items:
+    - "{{ datasaker_docker_path }}/agent/dsk-postgres-agent"
+    - "{{ datasaker_docker_path }}/agent/dsk-plan-postgres-agent"
 
+- name: "Setting dsk-postgres-agent config"
+  template:
+    src: postgres-agent-config.yml.j2
+    dest: "{{ datasaker_docker_path }}/dsk-postgres-config.yml"
+
+- name: "Setting plan-dsk-postgres-agent config"
+  template:
+    src: plan-postgres-agent-config.yml.j2
+    dest: "{{ datasaker_docker_path }}/dsk-plan-postgres-config.yml"
+
+- name: "Run dsk-postgres-agent container"
+  docker_container:
+    name: dsk-postgres-agent
+    image: datasaker/dsk-postgres-agent:rel0.1.2
+    state: started
+    restart_policy: always
+    detach: true
+    env:
+      DKS_LOG_LEVEL: "info"
+      DATA_SOURCE_USER: "{{ postgres_user_name | default('') }}"
+      DATA_SOURCE_PASS: "{{ postgres_user_password | default('') }}"
+      DATA_SOURCE_URI: "{{ postgres_database_address | default('') }}:{{ postgres_database_port | default('') }}?sslmode=disable"
+    volumes:
+      - "{{ datasaker_docker_path }}:/var/datasaker/"
+      - "{{ datasaker_docker_global_config }}:/etc/datasaker/global-config.yml:ro"
+      - "{{ datasaker_docker_path }}/dsk-postgres-config.yml:/etc/datasaker/dsk-postgres-agent/agent-config.yml:ro"
+
+- name: "Run dsk-plan-postgres-agent container"
+  docker_container:
+    name: dsk-plan-postgres-agent
+    image: datasaker/dsk-plan-postgres-agent:latest
+    state: started
+    restart_policy: always
+    detach: true
+    env:
+      DKS_LOG_LEVEL: "info"
+    volumes:
+      - "{{ datasaker_docker_path }}:/var/datasaker/"
+      - "{{ datasaker_docker_global_config }}:/etc/datasaker/global-config.yml:ro"
+      - "{{ datasaker_docker_path }}/dsk-plan-postgres-config.yml:/etc/datasaker/dsk-plan-postgres-agent/agent-config.yml:ro"

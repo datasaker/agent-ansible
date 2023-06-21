@@ -1,0 +1,20 @@
+agent:
+  metadata:
+    agent_name: "{{ docker_postgres_agent_name | default('dsk-postgres-agent') }}"
+  option:
+    exporter_config:
+      command: "/etc/datasaker/target-exporter"
+      port: 9187
+    scrape_configs:
+      - job_name: dsk-postgres-agent
+        metrics_path: /metrics/short
+        url: localhost:9187
+        filtering_configs:
+          rule: drop
+      - job_name: dsk-postgres-agent-long
+        scrape_interval: 60s
+        scrape_timeout: 10s
+        metrics_path: /metrics/long
+        url: localhost:9187
+        filtering_configs:
+          rule: drop
