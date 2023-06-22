@@ -4,4 +4,4 @@ agent:
     cluster_id: "{{ trace_agent_cluster_id | default('unknown_cluster') }}"
   option:
     collector_config: 
-      sampling_rate: "{{ trace_sampling_rate | default('10') }}"
+      sampling_rate: {{ trace_sampling_rate | default(10) | int }}

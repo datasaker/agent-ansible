@@ -4,6 +4,10 @@
     src: global-config.yml.j2
     dest: "/etc/datasaker/global-config.yml"
 
+- set_fact:
+    datasaker_agents: "{{ datasaker_agents | reject('equalto', 'dsk-log-agent') | list }}"
+  when: ansible_facts.distribution_version != "18.04"
+
 - name: "Create temporary directory for key manipulation"
   tempfile:
     state: directory
@@ -67,10 +71,29 @@
 - name: "Install datasaker agent"
   apt:
     name: "{{ item }}"
-    state: present
+    state: latest
     update_cache: yes
   with_items:
     - "{{ datasaker_agents }}"
-  notify:
-    - Reload systemd configuration
-    - Restart {{ item }} service
+  #  - Restart {{ item }} service
+  ignore_errors: true
+
+- name: "Install datasaker log agent"
+  apt:
+    name: "td-agent"
+    state: latest
+    update_cache: yes
+  when: '"dsk-log-agent" in datasaker_agents'
+
+- name: Reload systemd configuration
+  ansible.builtin.systemd:
+    daemon_reload: True
+
+- name: Restart dsk-agent service
+  ansible.builtin.systemd:
+    name: "{{ item }}"
+    enabled: true
+    state: restarted
+  with_items:
+    - "{{ datasaker_agents }}"
+  ignore_errors: true    

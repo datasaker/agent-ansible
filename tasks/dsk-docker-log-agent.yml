@@ -9,20 +9,20 @@
   with_items:
     - "{{ datasaker_docker_path }}/agent/dsk-log-agent"
 
-- name: "Touch agent config"
+- name: "create agent config"
   ansible.builtin.file:
-    path: "{{ datasaker_docker_path }}/log-agent-config.yml"
+    path: "{{ datasaker_docker_path }}/dsk-docker-log-agent-config.yml"
     state: touch
 
 - name: "Setting dsk-log-agent config"
   template:
-    src: log-agent-config.yml.j2
-    dest: "{{ datasaker_docker_path }}/log-agent-config.yml"
+    src: docker-log-agent-config.yml.j2
+    dest: "{{ datasaker_docker_path }}/dsk-docker-log-agent-config.yml"
 
 - name: Run Datasaker Log Agent
   docker_container:
     name: dsk-docker-log-agent
-    image: "datasaker/dsk-log-agent:{{ trace_agent_image_tag }}"
+    image: "datasaker/dsk-log-agent:{{ log_agent_image_tag }}"
     state: started
     detach: true
     restart_policy: "{{ log_agent_restart_policy }}"
@@ -32,6 +32,6 @@
     volumes:
       - "{{ datasaker_docker_path }}:/var/datasaker/"
       - "{{ datasaker_docker_global_config }}:/etc/datasaker/global-config.yml:ro"
-      - "{{ datasaker_docker_path }}/log-agent-config.yml:/etc/datasaker/dsk-log-agent/agent-config.yml:ro"
+      - "{{ datasaker_docker_path }}/dsk-docker-log-agent-config.yml:/etc/datasaker/dsk-log-agent/agent-config.yml:ro"
       - "{{ item }}"
   loop: "{{ custom_log_volume | default(['{{ docker_default_path }}:/var/log/sample/:ro']) }}"

@@ -30,7 +30,7 @@
   when:
   - datasaker_docker_agents
 
-- name: "Touch agent config"
+- name: "Create agent config"
   ansible.builtin.file:
     path: "{{ datasaker_docker_global_config }}"
     state: touch

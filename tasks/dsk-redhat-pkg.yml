@@ -28,6 +28,13 @@
   with_items:
     - "{{ datasaker_agents }}"
 
+- name: "Install datasaker log agent"
+  apt:
+    name: "td-agent"
+    state: latest
+    update_cache: yes
+  when: '"dsk-log-agent" in datasaker_agents'
+
 - name: "Install datasaker agent"
   yum:
     name: "{{ item }}"
@@ -38,3 +45,4 @@
   notify:
     - Reload systemd configuration
     - Restart {{ item }} service
+  ignore_errors: true

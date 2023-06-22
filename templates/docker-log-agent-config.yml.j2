@@ -2,30 +2,31 @@ agent:
   metadata:
     agent_name: "{{ log_agent_name | default('dsk-log-agent') }}"
   collect:
-{% for collect_item in log_collects %}
+{% for collect_item in log_collects | default([{'paths': ['/var/log/sample/*/*.log'], 'exclude_paths': [], 'keywords': [], 'tag': 'Default', 'service': {'name': 'default', 'category': 'etc', 'type': 'etc'}}]) %}
     - paths:
 {% for path in collect_item.paths %}
-        - "{{ path | default('/var/log/sample/*/*.log') }}"
+        - "{{ path }}"
 {% endfor %}
-{% if collect_item.exclude_paths is defined %}
       exclude_paths:
+{% if collect_item.exclude_paths | default([]) %}
 {% for exclude_path in collect_item.exclude_paths %}
-        - "{{ exclude_path | default('[]') }}"
+        - "{{ exclude_path }}"
 {% endfor %}
 {% endif %}
-{% if collect_item.keywords is defined %}
       keywords:
+{% if collect_item.keywords | default([]) %}
 {% for keyword in collect_item.keywords %}
-        - "{{ keyword | default('[]') }}"
+        - "{{- keyword -}}"
 {% endfor %}
 {% endif %}
-      tag: "{{ collect_item.tag | default('Default') }}"
+{% if collect_item.tag is defined %}
+      tag: "{{ collect_item.tag }}"
+{% endif %}
       service:
-        name: "{{ collect_item.service.name | default('default') }}"
-        category: "{{ collect_item.service.category | default('etc') }}"
-        type: "{{ collect_item.service.type | default('etc') }}"
+        name: "{{ collect_item.service.name }}"
+        category: "{{ collect_item.service.category }}"
+        type: "{{ collect_item.service.type }}"
 {% if collect_item.service.address is defined %}
         address: "{{ collect_item.service.address }}"
 {% endif %}
 {% endfor %}
-

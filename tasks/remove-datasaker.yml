@@ -18,7 +18,7 @@
     - datasaker_agents
 
 - name: Stop agent service
-  service:
+  ansible.builtin.systemd:
     name: "{{ item }}"
     enabled: true
     state: stopped
@@ -35,9 +35,26 @@
     update_cache: yes
   with_items:
     - "{{ datasaker_agents }}"
-  when: 
+  when:
+    - ansible_facts.os_family == "Debian"
     - datasaker_agents
+  notify:
+    - Reload systemd configuration
   ignore_errors: true
+
+- name: "Uninstall datasaker agent"
+  yum:
+    name: "{{ item }}"
+    state: absent
+  with_items:
+    - "{{ datasaker_agents }}"
+  when:
+    - ansible_facts.os_family == "RedHat"
+    - datasaker_agents
+  notify:
+    - Reload systemd configuration    
+  ignore_errors: true
+
 
 - name: Stop the Docker container
   docker_container:

@@ -8,7 +8,7 @@ The Ansible Datasaker role installs and configures the Datasaker Agent and integ
 
 - Requires Ansible v2.6+.
 - Supports most Debian Linux distributions.
-- Supports Amazon Linux 2023 distributions.
+- Supports Amazon Linux 2 distributions.
 
 ### Installation
 

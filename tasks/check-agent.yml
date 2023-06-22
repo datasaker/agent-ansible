@@ -9,7 +9,8 @@
 
 - name: "Check dsk-log-agent"
   include_tasks: dsk-log-agent.yml
-  when: '"dsk-log-agent" in datasaker_agents'
+  when: 
+  - '"dsk-log-agent" in datasaker_agents'
 
 - name: "Check dsk-postgres-agent"
   include_tasks: dsk-postgres-agent.yml

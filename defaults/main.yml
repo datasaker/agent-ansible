@@ -35,8 +35,7 @@ apt_usr_share_keyring: "/usr/share/keyrings/datasaker-archive-keyring.gpg"
 dsk_public_gpg_key: "https://dsk-agent-s3.s3.ap-northeast-2.amazonaws.com/dsk-agent-s3/public/public.gpg.key"
 
 datasaker_agents: ['dsk-node-agent']
-
-datasaker_docker_agents: ['dsk-docker-node-agent']
+datasaker_docker_agents: []
 
 datasaker_docker_config_path: "~/.datasaker"
 datasaker_docker_global_config: "{{ datasaker_docker_config_path }}/config.yml"
