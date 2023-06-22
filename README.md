@@ -179,11 +179,12 @@ ansible-galaxy install dsk_bot.datasaker
 ## Uninstallation
 
 Datasaker Agent를 제거 할 수 있습니다. 
+datasaker_clean은 uninstall이 `True`로 설정되어야 합니다.
 
 | 변수명                                      | 설명                                      |
 |--------------------------------------------|--------------------------------------------------|
-|`uninstall`| `datasaker_agents` 또는 `datasaker_docker_agents` 에 작성된 Agent만 제거.|
-|`datasaker_clean`|	`datasaker_agents` 또는 `datasaker_docker_agents` 에 작성된 Agent 와 생성 된 폴더 및 설정 파일까지 제거. |
+|`uninstall`| `datasaker_agents` 또는 `datasaker_docker_agents` 에 작성된 Agent만 제거. <br> (Default) `False`|
+|`datasaker_clean`|	`datasaker_agents` 또는 `datasaker_docker_agents` 에 작성된 Agent 와 생성 된 폴더 및 설정 파일까지 제거.  <br> (Default) `False`|
 
 ##### Datasaker Agents Uninstall Example
 
