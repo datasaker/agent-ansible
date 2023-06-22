@@ -30,7 +30,6 @@
     - "{{ datasaker_docker_path }}/agent/dsk-node-agent"
     - "{{ datasaker_docker_path }}/log"
 
-
 - name: "Run Datasaker Container Agent"
   ansible.builtin.docker_container:
     name: dsk-docker-container-agent

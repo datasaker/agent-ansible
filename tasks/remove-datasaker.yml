@@ -128,4 +128,3 @@
     - datasaker_clean == True
     - datasaker_docker_agents
   ignore_errors: yes
-
