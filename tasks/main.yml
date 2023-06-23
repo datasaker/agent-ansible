@@ -33,6 +33,7 @@
   include_tasks: check-agent.yml
   when: 
   - uninstall == False
+  - datasaker_docker_agents
 
 - name: "Include Docker Agent Path Permissions Setting"
   include_tasks: permissions.yml

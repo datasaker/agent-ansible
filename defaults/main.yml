@@ -1,5 +1,7 @@
 ---
 # defaults file for datasaker
+datasaker_host_path: /etc/datasaker
+datasaker_host_log_path: /var/log/datasaker
 
 datagate_trace_url: gate.kr.datasaker.io
 datagate_trace_port: 31300

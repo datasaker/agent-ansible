@@ -7,15 +7,20 @@
     owner: root
     group: root
   with_items:
-    - /etc/datasaker
+    - "{{ datasaker_host_path }}"
   when:
   - ansible_facts.os_family in ["Debian", "RedHat"]
   - datasaker_agents
 
+- name: "create global-config"
+  ansible.builtin.file:
+    path: "{{ datasaker_host_path }}/global-config.yml"
+    state: touch
+
 - name: "Setting global-config"
   template:
     src: global-config.yml.j2
-    dest: "/etc/datasaker/global-config.yml"
+    dest: "{{ datasaker_host_path }}"/global-config.yml"
   when:
   - ansible_facts.os_family in ["Debian", "RedHat"]
   - datasaker_agents
@@ -43,3 +48,4 @@
     dest: "{{ datasaker_docker_global_config }}"
   when:
   - datasaker_docker_agents
+

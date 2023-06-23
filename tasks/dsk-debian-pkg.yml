@@ -1,9 +1,4 @@
 ---
-- name: "Setting global-config"
-  template:
-    src: global-config.yml.j2
-    dest: "/etc/datasaker/global-config.yml"
-
 - set_fact:
     datasaker_agents: "{{ datasaker_agents | reject('equalto', 'dsk-log-agent') | list }}"
   when: ansible_facts.distribution_version != "18.04"
@@ -60,7 +55,7 @@
 
 - name: Make Datasaker Log Directory
   ansible.builtin.file:
-    path: "/var/log/datasaker/{{ item }}"
+    path: "{{ datasaker_host_log_path }}/{{ item }}"
     state: directory
     recurse: yes
     owner: root
