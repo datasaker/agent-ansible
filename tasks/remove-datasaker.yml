@@ -1,26 +1,8 @@
 ---
-- name: Remove Datasaker Log Directory
-  ansible.builtin.file:
-    path: "/var/log/datasaker/{{ item }}"
-    state: absent
-  with_items:
-    - "{{ datasaker_agents }}"
-  when: 
-    - datasaker_agents
-
-- name: Remove Datasaker Agent Directory
-  ansible.builtin.file:
-    path: "/etc/datasaker/{{ item }}"
-    state: absent
-  with_items:
-    - "{{ datasaker_agents }}"
-  when: 
-    - datasaker_agents
-
 - name: Stop agent service
   ansible.builtin.systemd:
     name: "{{ item }}"
-    enabled: true
+    enabled: false
     state: stopped
   with_items:
     - "{{ datasaker_agents }}"
@@ -55,16 +37,54 @@
     - Reload systemd configuration    
   ignore_errors: true
 
+- name: Remove Datasaker Log Directory
+  ansible.builtin.file:
+    path: "{{ datasaker_host_log_path }}/{{ item }}"
+    state: absent
+  with_items:
+    - "{{ datasaker_agents }}"
+  when: 
+    - datasaker_agents
+
+- name: Remove Datasaker Agent Directory
+  ansible.builtin.file:
+    path: "{{ datasaker_host_path }}/{{ item }}"
+    state: absent
+  with_items:
+    - "{{ datasaker_agents }}"
+  when: 
+    - datasaker_agents
+
+- name: Remove Datasaker Host Directory
+  ansible.builtin.file:
+    path: "{{ item }}"
+    state: absent
+  with_items:
+    - "{{ datasaker_host_path }}"
+    - "{{ datasaker_host_log_path }}"
+    - "{{ apt_sources_list }}"
+    - "{{ apt_trusted_d_keyring }}"
+    - "{{ apt_usr_share_keyring }}"
+  when:
+    - datasaker_clean == True
+    - datasaker_agents
 
 - name: Stop the Docker container
   docker_container:
     name: "{{ item }}"
     state: absent
   with_items:
-    - "dsk-docker-container-agent"
     - "{{ datasaker_docker_agents }}"
   when: 
     - datasaker_docker_agents
+  ignore_errors: true
+
+- name: Stop the Docker container-agent container
+  docker_container:
+    name: "dsk-docker-container-agent"
+    state: absent
+  when:
+    - '"dsk-docker-node-agent" in datasaker_docker_agents'
   ignore_errors: true
 
 - name: Stop the Docker plan-postgres-agent container
@@ -75,29 +95,14 @@
     - '"dsk-docker-postgres-agent" in datasaker_docker_agents'
   ignore_errors: true
 
-- name: Remove Datasaker Agent Directory
+- name: Remove Datasaker Docker Agent Directory
   ansible.builtin.file:
-    path: "/etc/datasaker/{{ item }}"
+    path: "{{ datasaker_docker_path }}/{{ item }}"
     state: absent
   with_items:
-    - "{{ datasaker_agents }}"
+    - "{{ datasaker_docker_agents }}"
   when: 
-    - datasaker_agents
-
-- name: Remove Datasaker All Directory
-  ansible.builtin.file:
-    path: "{{ item }}"
-    state: absent
-  with_items:
-    - /etc/datasaker
-    - /var/log/datasaker
-    - /var/datasaker
-    - "{{ apt_sources_list }}"
-    - "{{ apt_trusted_d_keyring }}"
-    - "{{ apt_usr_share_keyring }}"
-  when:
-    - datasaker_clean == True
-    - datasaker_agents
+    - datasaker_docker_agents
 
 - name: "Remove datasaker_docker_user"
   ansible.builtin.user:

@@ -1,6 +1,6 @@
 - name: "Change owner and group of datasaker docker directory"
   ansible.builtin.file:
-    path: /var/datasaker
+    path: "{{ datasaker_docker_path }}"
     owner: "{{ datasaker_docker_user }}"
     group: "{{ datasaker_docker_group }}"
     recurse: yes

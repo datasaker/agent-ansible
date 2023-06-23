@@ -20,6 +20,11 @@
     src: docker-postgres-agent-config.yml.j2
     dest: "{{ datasaker_docker_path }}/dsk-docker-postgres-config.yml"
 
+- name: "Create agent config"
+  ansible.builtin.file:
+    path: "{{ datasaker_docker_path }}/dsk-docker-plan-postgres-config.yml"
+    state: touch
+
 - name: "Setting plan-dsk-postgres-agent config"
   template:
     src: docker-plan-postgres-agent-config.yml.j2

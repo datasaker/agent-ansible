@@ -48,4 +48,3 @@
     dest: "{{ datasaker_docker_global_config }}"
   when:
   - datasaker_docker_agents
-

@@ -1,7 +1,7 @@
 ---
-- name: Make agent Directory
+- name: "Make agent Directory"
   ansible.builtin.file:
-    path: "/etc/datasaker/{{ item }}"
+    path: "{{ datasaker_host_path }}/{{ item }}"
     state: directory
     recurse: yes
     owner: root
@@ -9,7 +9,12 @@
   with_items:
     - "dsk-plan-postgres-agent"
 
+- name: "Create agent config"
+  ansible.builtin.file:
+    path: "{{ datasaker_host_path }}/dsk-plan-postgres-agent/agent-config.yml"
+    state: touch
+
 - name: "Setting dsk-plan-postgres-agent config"
   template:
     src: plan-postgres-agent-config.yml.j2
-    dest: "/etc/datasaker/dsk-plan-postgres-agent/agent-config.yml"
+    dest: "{{ datasaker_host_path }}/dsk-plan-postgres-agent/agent-config.yml"

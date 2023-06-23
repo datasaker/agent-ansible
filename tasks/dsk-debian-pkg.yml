@@ -90,4 +90,4 @@
     state: restarted
   with_items:
     - "{{ datasaker_agents }}"
-  ignore_errors: true    
+  ignore_errors: true
