@@ -20,6 +20,7 @@ galaxy_info:
         - '8'
         - '9'
     - name: Amazon Linux
+      versions:    
         - '2'
         - '2023'
   galaxy_tags:
