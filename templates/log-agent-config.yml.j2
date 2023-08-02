@@ -1,32 +1,42 @@
 agent:
   metadata:
-    agent_name: "{{ log_agent_name | default('dsk-log-agent') }}"
-  collect:
-{% for collect_item in log_collects | default([{'paths': ['/var/log/*.log'], 'exclude_paths': [], 'keywords': [], 'tag': 'Default', 'service': {'name': 'default', 'category': 'etc', 'type': 'etc'}}]) %}
-    - paths:
-{% for path in collect_item.paths %}
-        - "{{ path }}"
+    agent_name: {{ metadata.agent_name | default('dsk-log-agent') }}
+    cluster_id: {{ metadata.cluster_id | default('unknown') }}
+  logs:
+{% for log in logs | default([{'service': 'default', 'collect': {'type': 'file', 'category': 'etc', 'file': {'paths': ['/var/log/*.log']}}}]) %}
+    - service: {{ log.service | default('default') }}
+      tag: 
+{% for tag in log.tag | default([]) %}
+        - {{ tag }}
 {% endfor %}
-      exclude_paths:
-{% if collect_item.exclude_paths | default([]) %}
-{% for exclude_path in collect_item.exclude_paths %}
-        - "{{ exclude_path }}"
+      keyword: 
+{% for keyword in log.keyword | default([]) %}
+        - {{ keyword }}
 {% endfor %}
-{% endif %}
-      keywords:
-{% if collect_item.keywords | default([]) %}
-{% for keyword in collect_item.keywords %}
-        - "{{- keyword -}}"
+      multiline:
+        format: {{ log.multiline.format | default('') }}
+        pattern: 
+{% for pattern in log.multiline.pattern | default([]) %}
+          - {{ pattern }}
 {% endfor %}
-{% endif %}
-{% if collect_item.tag is defined %}
-      tag: "{{ collect_item.tag }}"
-{% endif %}
-      service:
-        name: "{{ collect_item.service.name }}"
-        category: "{{ collect_item.service.category }}"
-        type: "{{ collect_item.service.type }}"
-{% if collect_item.service.address is defined %}
-        address: "{{ collect_item.service.address }}"
+      masking:
+{% for mask in log.masking | default([]) %}
+        - pattern: {{ mask.pattern }}
+          replace: {{ mask.replace }}
+{% endfor %}
+      collect:
+{% if log.collect.type == "file" %}
+        type: {{ log.collect.type | default('file') }}
+        category: {{ log.collect.category | default('etc') }}
+        address: {{ log.collect.address | default('') }}
+        file:
+          paths: 
+{% for path in log.collect.file.paths %}
+            - {{ path }}
+{% endfor %}
+          exclude_paths:
+{% for exclude_path in log.collect.file.exclude_paths | default([]) %}
+            - {{ exclude_path }}
+{% endfor %}
 {% endif %}
 {% endfor %}

@@ -17,6 +17,11 @@ galaxy_info:
     - name: EL
       versions: 
         - '7'
+        - '8'
+        - '9'
+    - name: Amazon Linux
+        - '2'
+        - '2023'
   galaxy_tags:
     - monitoring
 dependencies: []

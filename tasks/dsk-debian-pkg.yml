@@ -1,7 +1,14 @@
 ---
-- set_fact:
-    datasaker_agents: "{{ datasaker_agents | reject('equalto', 'dsk-log-agent') | list }}"
-  when: ansible_facts.distribution_version != "18.04"
+# - set_fact:
+#     datasaker_agents: "{{ datasaker_agents | reject('equalto', 'dsk-log-agent') | list }}"
+#   when: ansible_facts.distribution_version != "18.04"
+- name: Set os-specific variables
+  set_fact:
+    os_specific: "{% if ansible_facts['os_family'] == 'RedHat' and ansible_facts['distribution_major_version'] == '7' %}datasaker-redhat-7
+                  {% elif ansible_facts['os_family'] == 'RedHat' and ansible_facts['distribution_major_version'] == '8' %}datasaker-redhat-8
+                  {% elif ansible_facts['os_family'] == 'Amazon' and ansible_facts['distribution_major_version'] == '2' %}datasaker-amazonlinux-2
+                  {% elif ansible_facts['os_family'] == 'Debian'%}debian-repos
+                  {% else %}unknown{% endif %}"
 
 - name: "Create temporary directory for key manipulation"
   tempfile:
@@ -53,7 +60,7 @@
     update_cache: yes
     force: yes
 
-- name: Make Datasaker Log Directory
+- name: "Make Datasaker Log Directory"
   ansible.builtin.file:
     path: "{{ datasaker_host_log_path }}/{{ item }}"
     state: directory
@@ -77,13 +84,15 @@
     name: "td-agent"
     state: latest
     update_cache: yes
-  when: '"dsk-log-agent" in datasaker_agents'
+  when: 
+    - '"dsk-log-agent" in datasaker_agents'
+    - log_agent_image_tag != "latest"  
 
-- name: Reload systemd configuration
+- name: "Reload systemd configuration"
   ansible.builtin.systemd:
     daemon_reload: True
 
-- name: Restart dsk-agent service
+- name: "Restart dsk-agent service"
   ansible.builtin.systemd:
     name: "{{ item }}"
     enabled: true

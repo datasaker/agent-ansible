@@ -1,14 +1,22 @@
 ---
+- name: Set os-specific variables
+  set_fact:
+    os_specific: "{% if ansible_facts['os_family'] == 'RedHat' and ansible_facts['distribution_major_version'] == '7' %}datasaker-redhat-7
+                  {% elif ansible_facts['os_family'] == 'RedHat' and ansible_facts['distribution_major_version'] == '8' %}datasaker-redhat-8
+                  {% elif ansible_facts['os_family'] == 'RedHat' and ansible_facts['distribution_major_version'] == '9' %}datasaker-redhat-9
+                  {% elif ansible_facts['os_family'] == 'Amazon' and ansible_facts['distribution_major_version'] == '2' %}datasaker-amazonlinux-2
+                  {% else %}unknown{% endif %}"
+
 - name: "Add datasaker repository"
   yum_repository:
     name: datasaker
     description: datasaker-repo
-    baseurl: "{{ datasaker_yum_repo }}"
+    baseurl: "{{ datasaker_yum_repo }}{{ os_specific }}"
     enabled: "{{ datasaker_yum_enabled }}"
     gpgcheck: "{{ datasaker_yum_gpgcheck }}"
 
-- set_fact:
-    datasaker_agents: "{{ datasaker_agents | reject('equalto', 'dsk-log-agent') | list }}"
+# - set_fact:
+#     datasaker_agents: "{{ datasaker_agents | reject('equalto', 'dsk-log-agent') | list }}"
 
 - name: "Check datasaker Agent"
   include_tasks: check-agent.yml
@@ -28,7 +36,9 @@
     name: "td-agent"
     state: latest
     update_cache: yes
-  when: '"dsk-log-agent" in datasaker_agents'
+  when: 
+    - '"dsk-log-agent" in datasaker_agents'
+    - log_agent_image_tag != "latest"
 
 - name: "Install datasaker agent"
   yum:
@@ -41,3 +51,11 @@
     - Reload systemd configuration
     - Restart {{ item }} service
   ignore_errors: true
+
+- name: "Setting dsk-log-agent config"
+  template:
+    src: log-agent-config.yml.j2
+    dest: "{{ datasaker_host_path }}/dsk-log-agent/agent-config.yml"
+  when: 
+    - '"dsk-log-agent" in datasaker_agents'
+    - log_agent_image_tag == "latest"

@@ -26,7 +26,7 @@ datagate_loggate_timeout: 5s
 datasaker_api_url: api.kr.datasaker.io
 datasaker_api_send_interval: 1m
 
-datasaker_yum_repo: "http://nexus.exem-oss.org/repository/datasaker-amazonlinux-2023"
+datasaker_yum_repo: "https://nexus.exem-oss.org/repository/"
 datasaker_yum_enabled: yes
 datasaker_yum_gpgcheck: no
 
@@ -70,6 +70,8 @@ trace_agent_log_level: "INFO"
 log_agent_log_level: "INFO"
 postgres_agent_log_level: "INFO"
 plan_postgres_agent_log_level: "INFO"
+
+log_agent_port: 21212
 
 uninstall: False
 datasaker_clean: False

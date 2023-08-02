@@ -19,13 +19,14 @@
     src: docker-log-agent-config.yml.j2
     dest: "{{ datasaker_docker_path }}/dsk-docker-log-agent-config.yml"
 
-- name: Run Datasaker Log Agent
+- name: "Run Datasaker Log Agent"
   docker_container:
     name: dsk-docker-log-agent
     image: "datasaker/dsk-log-agent:{{ log_agent_image_tag }}"
     state: started
-    detach: true
     restart_policy: "{{ log_agent_restart_policy }}"
+    ports:
+      - "{{ log_agent_port }}:{{ log_agent_port }}"
     env:
       DKS_LOG_LEVEL: "{{ log_agent_log_level }}"
     command: "-global.config=/etc/datasaker/global-config.yml -agent.config=/etc/datasaker/dsk-log-agent/agent-config.yml -mount.volume=true"
@@ -33,5 +34,18 @@
       - "{{ datasaker_docker_path }}:/var/datasaker/"
       - "{{ datasaker_docker_global_config }}:/etc/datasaker/global-config.yml:ro"
       - "{{ datasaker_docker_path }}/dsk-docker-log-agent-config.yml:/etc/datasaker/dsk-log-agent/agent-config.yml:ro"
-      - "{{ item }}"
-  loop: "{{ custom_log_volume | default(['{{ docker_default_path }}:/var/log/sample/:ro']) }}"
+      - "{{ item }}:{{ item }}:ro"
+  with_items: "{{ custom_log_volume | default(['{{ docker_default_path }}']) }}"
+
+- name: "Run APP with fluentd logging"
+  docker_container:
+    name: "{{ app_name }}"
+    image: "{{ app_image }}"
+    state: started
+    log_options:
+      log-driver: fluentd
+      log-opt:
+        fluentd-address: "{{ log_agent_port }}:{{ log_agent_port }}"
+  when:
+    - app_name is defined
+    - app_image is defined
