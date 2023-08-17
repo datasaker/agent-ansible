@@ -124,6 +124,7 @@ In this example:
 |`logs[*].collect.address`|Sets the database host and port information (required if service category is database).|`None`|
 |`logs[*].collect.file.paths`|Sets the paths for log collection. Example: /var/log/sample/.log.|`['/var/log/*.log']`|
 |`logs[*].collect.file.exclude_paths`|Sets the paths to be excluded from log collection.|`None`|
+|`custom_log_volume`| Volume mount in Docker Log Agent. |`/var/lib/docker/containers`|
 |`postgres_user_name`| Enter the Postgres user ID. <br> | `None` |
 |`postgres_user_password`| Enter the Postgres user password. <br> | `None` |
 |`postgres_database_address`| Enter the Postgres address. <br> | `None` |
@@ -152,7 +153,7 @@ In this example:
     - role: dsk_bot.datasaker
   vars:
     datasaker_api_key: "<YOUR_API_KEY>"
-    datasaker_docker_agents:
+    datasaker_agents:
       - "dsk-node-agent"
       - "dsk-trace-agent"
       - "dsk-log-agent"
@@ -167,12 +168,11 @@ In this example:
     plan_postgres_database_name: sample
     plan_postgres_database_port: 5432
     logs:
-      - collect:
-          type: file
-          file:
-            paths: 
-              - /var/log/*.log
-              - /datasaker/log/*.log
+    - collect:
+        type: file
+        file:
+          paths:
+          - /var/log/*.log
 ```
 
 ###### Ansible Playbook Setting Example (Docker)
@@ -198,12 +198,15 @@ In this example:
     plan_postgres_database_name: sample
     plan_postgres_database_port: 5432
     logs:
-      - collect:
-          type: file
-          file:
-            paths: 
-              - /var/log/*.log
-              - /datasaker/log/*.log
+    - collect:
+        type: file
+        file:
+          paths:
+          - /var/log/*.log
+          - /var/lib/docker/containers/*/*.log
+    custom_log_volume:
+    - /var/log/
+    - /var/lib/docker/containers
 ```
 
 ## Uninstallation

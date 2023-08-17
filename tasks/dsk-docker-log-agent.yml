@@ -30,12 +30,14 @@
     env:
       DKS_LOG_LEVEL: "{{ log_agent_log_level }}"
     command: "-global.config=/etc/datasaker/global-config.yml -agent.config=/etc/datasaker/dsk-log-agent/agent-config.yml -mount.volume=true"
-    volumes:
+    volumes: "{{ combined_volumes }}"
+  vars:
+    base_volumes:
       - "{{ datasaker_docker_path }}:/var/datasaker/"
       - "{{ datasaker_docker_global_config }}:/etc/datasaker/global-config.yml:ro"
       - "{{ datasaker_docker_path }}/dsk-docker-log-agent-config.yml:/etc/datasaker/dsk-log-agent/agent-config.yml:ro"
-      - "{{ item }}:{{ item }}:ro"
-  with_items: "{{ custom_log_volume | default(['{{ docker_default_path }}']) }}"
+    custom_volumes: "{{ custom_log_volume | default([docker_default_path]) | map('regex_replace', '^(.*)$', '\\1:\\1:ro') | list }}"
+    combined_volumes: "{{ base_volumes + custom_volumes }}"
 
 - name: "Run APP with fluentd logging"
   docker_container:
