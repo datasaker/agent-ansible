@@ -26,7 +26,7 @@ ansible-galaxy install dsk_bot.datasaker
 
 아래는 기본 설치에 대한 예시입니다.
 
-#### Host Agent Default Install Example
+#### Host Agent Default Install Exampl
 ```yml
 - hosts: servers
   become: true
