@@ -1,0 +1,33 @@
+agent:
+  metadata:
+    agent_name: "{{ mysql_agent_name | default('dsk-mysql-agent') }}"
+    cluster_id: "{{ mysql_agent_cluster | default('unknown') }}"
+  option:
+    exporter_config:
+      command: "/usr/bin/dsk-mysql-exporter"
+      port: {{ mysql_agent_port | default('19104') }}
+      args:
+      - --data-source-user={{ mysql_user_name | default('') }}
+      - --data-source-pass={{ mysql_user_password | default('') }}
+      - --data-source-uri={{ mysql_database_address | default('') }}:{{ mysql_database_port | default('') }}
+      - --data-source-dbname={{ mysql_database_name | default('') }}
+    scrape_interval: 15s
+    scrape_timeout: 5s
+    scrape_configs:
+      - job_name: dsk-mysql-agent-5s
+        scrape_interval: 5s
+        metrics_path: /metrics/5s
+        url: localhost:{{ mysql_agent_port | default('19104') }}
+        filtering_configs:
+          rule: drop
+      - job_name: dsk-mysql-agent-15s
+        metrics_path: /metrics/15s
+        url: localhost:{{ mysql_agent_port | default('19104') }}
+        filtering_configs:
+          rule: drop
+      - job_name: dsk-mysql-agent-60s
+        scrape_interval: 60s
+        metrics_path: /metrics/60s
+        url: localhost:{{ mysql_agent_port | default('19104') }}
+        filtering_configs:
+          rule: drop

@@ -7,9 +7,9 @@ agent:
       port: 19187
       args:
         - --extend.query-path=/etc/datasaker/dsk-postgres-agent/queries.yaml
-        - --data-source-user="{{ postgres_user_name | default('') }}"
-        - --data-source-pass="{{ postgres_user_password | default('') }}"
-        - --data-source-uri="{{ postgres_database_address | default('') }}":"{{ postgres_database_port | default('') }}"
+        - --data-source-user={{ postgres_user_name | default('') }}
+        - --data-source-pass={{ postgres_user_password | default('') }}
+        - --data-source-uri={{ postgres_database_address | default('') }}":"{{ postgres_database_port | default('') }}
     scrape_interval: 15s
     scrape_timeout: 5s
     scrape_configs:

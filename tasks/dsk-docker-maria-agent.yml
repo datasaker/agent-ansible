@@ -1,0 +1,59 @@
+---
+- name: "Create datasaker local directory"
+  ansible.builtin.file:
+    path: "{{ item }}"
+    state: directory
+    owner: "{{datasaker_docker_user}}"
+    group: "{{datasaker_docker_group}}"
+    mode: '0755'
+  with_items:
+    - "{{ datasaker_docker_path }}/agent/dsk-maria-agent"
+    - "{{ datasaker_docker_path }}/agent/dsk-plan-maria-agent"
+
+- name: "Create agent config"
+  ansible.builtin.file:
+    path: "{{ datasaker_docker_path }}/dsk-docker-maria-config.yml"
+    state: touch
+
+- name: "Setting dsk-maria-agent config"
+  template:
+    src: docker-maria-agent-config.yml.j2
+    dest: "{{ datasaker_docker_path }}/dsk-docker-maria-config.yml"
+
+- name: "Create agent config"
+  ansible.builtin.file:
+    path: "{{ datasaker_docker_path }}/dsk-docker-plan-maria-config.yml"
+    state: touch
+
+- name: "Setting plan-dsk-maria-agent config"
+  template:
+    src: docker-plan-maria-agent-config.yml.j2
+    dest: "{{ datasaker_docker_path }}/dsk-docker-plan-maria-config.yml"
+
+- name: "Run dsk-maria-agent container"
+  docker_container:
+    name: dsk-docker-maria-agent
+    image: "datasaker/dsk-maria-agent:{{ maria_agent_image_tag }}"
+    state: started
+    restart_policy: "{{ maria_agent_restart_policy }}"
+    detach: true
+    env:
+      DKS_LOG_LEVEL: "info"
+    volumes:
+      - "{{ datasaker_docker_path }}:/var/datasaker/"
+      - "{{ datasaker_docker_global_config }}:/etc/datasaker/global-config.yml:ro"
+      - "{{ datasaker_docker_path }}/dsk-docker-maria-config.yml:/etc/datasaker/dsk-maria-agent/agent-config.yml:ro"
+
+- name: "Run dsk-plan-maria-agent container"
+  docker_container:
+    name: dsk-docker-plan-maria-agent
+    image: "datasaker/dsk-plan-maria-agent:{{ plan_maria_agent_image_tag }}"
+    state: started
+    restart_policy: "{{ plan_maria_agent_restart_policy }}"
+    detach: true
+    env:
+      DKS_LOG_LEVEL: "info"
+    volumes:
+      - "{{ datasaker_docker_path }}:/var/datasaker/"
+      - "{{ datasaker_docker_global_config }}:/etc/datasaker/global-config.yml:ro"
+      - "{{ datasaker_docker_path }}/dsk-docker-plan-maria-config.yml:/etc/datasaker/dsk-plan-maria-agent/agent-config.yml:ro"

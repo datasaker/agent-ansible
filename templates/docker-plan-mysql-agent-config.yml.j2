@@ -1,0 +1,14 @@
+agent:
+  metadata:
+    agent_name: "{{ plan_mysql_agent_name | default('dsk-plan-mysql-agent') }}"
+    cluster_id: "{{ plan_mysql_agent_cluster | default('unknown') }}"
+  data_source_name:
+    user: {{ mysql_user_name | default('') }}
+    password: {{ mysql_user_password | default('') }}
+    address: {{ mysql_database_address | default('') }}
+    port: {{ mysql_database_port | default('') }}
+    DBName: {{ mysql_database_name | default('') }}
+  explain:
+    scrape_interval: {{ scrape_interval | default('5s') }}
+    scrape_timeout: {{ scrape_timeout | default('5s') }}
+    slow_query_standard: {{ slow_query_standard | default('1s') }}

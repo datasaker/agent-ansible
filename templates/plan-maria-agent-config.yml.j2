@@ -1,0 +1,14 @@
+agent:
+  metadata:
+    agent_name: "{{ plan_maria_agent_name | default('dsk-plan-maria-agent') }}"
+    cluster_id: "{{ plan_maria_agent_cluster | default('unknown') }}"
+  data_source_name:
+    user: {{ maria_user_name | default('') }}
+    password: {{ maria_user_password | default('') }}
+    address: {{ maria_database_address | default('') }}
+    port: {{ maria_database_port | default('') }}
+    DBName: {{ maria_database_name | default('') }}
+  explain:
+    scrape_interval: {{ scrape_interval | default('5s') }}
+    scrape_timeout: {{ scrape_timeout | default('5s') }}
+    slow_query_standard: {{ slow_query_standard | default('1s') }}

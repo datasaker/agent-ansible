@@ -9,8 +9,7 @@
 
 - name: "Check dsk-log-agent"
   include_tasks: dsk-log-agent.yml
-  when: 
-  - '"dsk-log-agent" in datasaker_agents'
+  when: '"dsk-log-agent" in datasaker_agents'
 
 - name: "Check dsk-postgres-agent"
   include_tasks: dsk-postgres-agent.yml
@@ -19,6 +18,22 @@
 - name: "Check dsk-plan-postgres-agent"
   include_tasks: dsk-plan-postgres-agent.yml
   when: '"dsk-plan-postgres-agent" in datasaker_agents'
+
+- name: "Check dsk-mysql-agent"
+  include_tasks: dsk-mysql-agent.yml
+  when: '"dsk-mysql-agent" in datasaker_agents'
+
+- name: "Check dsk-plan-mysql-agent"
+  include_tasks: dsk-plan-mysql-agent.yml
+  when: '"dsk-plan-mysql-agent" in datasaker_agents'
+
+- name: "Check dsk-maria-agent"
+  include_tasks: dsk-maria-agent.yml
+  when: '"dsk-maria-agent" in datasaker_agents'
+
+- name: "Check dsk-plan-maria-agent"
+  include_tasks: dsk-plan-maria-agent.yml
+  when: '"dsk-plan-maria-agent" in datasaker_agents'
 
 - name: "Check dsk-docker-node-agent"
   include_tasks: dsk-docker-node-agent.yml
@@ -47,3 +62,11 @@
 - name: "Check dsk-docker-trace-agent"
   include_tasks: dsk-docker-trace-agent.yml
   when: '"dsk-docker-trace-agent" in datasaker_docker_agents'
+
+- name: "Check dsk-docker-mysql-agent"
+  include_tasks: dsk-docker-mysql-agent.yml
+  when: '"dsk-docker-mysql-agent" in datasaker_docker_agents'
+
+- name: "Check dsk-docker-maria-agent"
+  include_tasks: dsk-docker-maria-agent.yml
+  when: '"dsk-docker-maria-agent" in datasaker_docker_agents'

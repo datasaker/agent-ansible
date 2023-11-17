@@ -1,0 +1,33 @@
+agent:
+  metadata:
+    agent_name: "{{ maria_agent_name | default('dsk-maria-agent') }}"
+    cluster_id: "{{ maria_agent_cluster | default('unknown') }}"
+  option:
+    exporter_config:
+      command: "/usr/bin/dsk-maria-exporter"
+      port: {{ maria_agent_port | default('19104') }}
+      args:
+      - --data-source-user={{ maria_user_name | default('') }}
+      - --data-source-pass={{ maria_user_password | default('') }}
+      - --data-source-uri={{ maria_database_address | default('') }}:{{ maria_database_port | default('') }}
+      - --data-source-dbname={{ maria_database_name | default('') }}
+    scrape_interval: 15s
+    scrape_timeout: 5s
+    scrape_configs:
+      - job_name: dsk-maria-agent-5s
+        scrape_interval: 5s
+        metrics_path: /metrics/5s
+        url: localhost:{{ maria_agent_port | default('19104') }}
+        filtering_configs:
+          rule: drop
+      - job_name: dsk-maria-agent-15s
+        metrics_path: /metrics/15s
+        url: localhost:{{ maria_agent_port | default('19104') }}
+        filtering_configs:
+          rule: drop
+      - job_name: dsk-maria-agent-60s
+        scrape_interval: 60s
+        metrics_path: /metrics/60s
+        url: localhost:{{ maria_agent_port | default('19104') }}
+        filtering_configs:
+          rule: drop
