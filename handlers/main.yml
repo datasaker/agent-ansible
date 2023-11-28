@@ -32,3 +32,27 @@
     name: dsk-plan-postgres-agent
     enabled: true
     state: restarted    
+
+- name: Restart dsk-mysql-agent service
+  ansible.builtin.systemd:
+    name: dsk-mysql-agent
+    enabled: true
+    state: restarted
+
+- name: Restart dsk-plan-mysql-agent service
+  ansible.builtin.systemd:
+    name: dsk-plan-mysql-agent
+    enabled: true
+    state: restarted   
+
+- name: Restart dsk-maria-agent service
+  ansible.builtin.systemd:
+    name: dsk-maria-agent
+    enabled: true
+    state: restarted
+
+- name: Restart dsk-plan-maria-agent service
+  ansible.builtin.systemd:
+    name: dsk-plan-maria-agent
+    enabled: true
+    state: restarted   
