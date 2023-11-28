@@ -26,7 +26,7 @@ ansible-galaxy install dsk_bot.datasaker
 
 아래는 기본 설치에 대한 예시입니다.
 
-#### Host Agent Default Install Exampl
+#### Host Agent Default Install Example
 ```yml
 - hosts: servers
   become: true
@@ -111,6 +111,8 @@ ansible-galaxy install dsk_bot.datasaker
 
 ### Datasaker Agent 상세 설정
 - Host Agent 와 Docker Container Agent는 같은 설정값을 사용합니다.
+- mysql-agent 와 plan-mysql-agent는 같은 설정값을 사용합니다.
+- maria-agent 와 plan-maria-agent는 같은 설정값을 사용합니다.
 
 | 변수명                                      | 설명                                      | Default                                      |
 |--------------------------------------------|--------------------------------------------------|--------------------------------------------------|
@@ -144,6 +146,19 @@ ansible-galaxy install dsk_bot.datasaker
 |`plan_postgres_sender_number`| `dsk-plan-postgres-agent`에 Plan Postgres sender number 설정. <br> | `10` |
 |`plan_postgres_activity_query_buffer`| `dsk-plan-postgres-agent`에 Plan Postgres activity query buffer 설정. <br> | `50` |
 |`plan_postgres_plan_sender_buffer`| `dsk-plan-postgres-agent`에 Plan Postgres plan sender buffer 설정. <br> | `50` |
+|`mysql_user_name`|`mysql_user_name`에 Mysql user ID 설정.|`None`|
+|`mysql_user_password`|`mysql_user_password`에 Mysql user password 설정.|`None`|
+|`mysql_database_address`|`mysql_database_address`에 Mysql address 설정.|`None`|
+|`mysql_database_port`|`mysql_database_port`에 Mysql port 설정.|`None`|
+|`mysql_database_name`|`mysql_database_name`에 Mysql database 설정.|`None`|
+|`mysql_agent_port`|`mysql_agent_port`에 Mysql agent port 설정.|`9104`|
+|`maria_user_name`|`maria_user_name`에 Maria user ID 설정.|`None`|
+|`maria_user_password`|`maria_user_password`에 Maria user password 설정.|`None`|
+|`maria_database_address`|`maria_database_address`에 Maria address 설정.|`None`|
+|`maria_database_port`|`maria_database_port`에 Maria port 설정.|`None`|
+|`maria_database_name`|`maria_database_name`에 Maria database 설정.|`None`|
+|`maria_agent_port`|`maria_agent_port`에 Maria agent port 설정.|`9104`|
+
 
 #### Ansible Playbook 상세 설정 Example (Linux)
 ```yml
