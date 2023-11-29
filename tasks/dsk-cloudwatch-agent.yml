@@ -1,0 +1,20 @@
+---
+- name: "Make agent Directory"
+  ansible.builtin.file:
+    path: "{{ datasaker_host_path }}/{{ item }}"
+    state: directory
+    recurse: yes
+    owner: root
+    group: root
+  with_items:
+    - "dsk-cloudwatch-agent"
+
+- name: "Create agent env"
+  ansible.builtin.file:
+    path: "{{ datasaker_host_path }}/dsk-cloudwatch-agent/agent.env"
+    state: touch
+
+- name: "Setting dsk-cloudwatch-agent env"
+  template:
+    src: agent.env.j2
+    dest: "{{ datasaker_host_path }}/dsk-cloudwatch-agent/agent.env"

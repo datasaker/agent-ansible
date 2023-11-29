@@ -1,0 +1,25 @@
+---
+- name: "Create datasaker local directory"
+  ansible.builtin.file:
+    path: "{{ item }}"
+    state: directory
+    owner: "{{datasaker_docker_user}}"
+    group: "{{datasaker_docker_group}}"
+    mode: '0755'
+  with_items:
+    - "{{ datasaker_docker_path }}/agent/dsk-cloudwatcj-agent"
+
+- name: "Run Datasaker Cloudwatch Agent"
+  ansible.builtin.docker_container:
+    name: dsk-docker-cloudwatch-agent
+    image: "datasaker/dsk-cloudwatch-agent:{{ cloudwatch_agent_image_tag }}"
+    state: started
+    restart_policy: "{{ cloudwatch_agent_restart_policy }}"
+    detach: true
+    env:
+      DSK_CLUSTER_ID: "{{ cloudwatch_agent_cluster | default('unknown') }}"
+      AWS_ACCESS_KEY_ID: "{{ aws_access_key_id }}"
+      AWS_SECRET_ACCESS_KEY: "{{ aws_secret_access_key }}"
+    volumes:
+      - "{{ datasaker_docker_path }}:/var/datasaker/"
+      - "{{ datasaker_docker_global_config }}:/etc/datasaker/global-config.yml:ro"

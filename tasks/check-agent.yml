@@ -1,4 +1,7 @@
 ---
+
+## host agent ##
+
 - name: "Check dsk-node-agent"
   include_tasks: dsk-node-agent.yml
   when: '"dsk-node-agent" in datasaker_agents'
@@ -35,6 +38,16 @@
   include_tasks: dsk-plan-maria-agent.yml
   when: '"dsk-plan-maria-agent" in datasaker_agents'
 
+- name: "Check dsk-redis-agent"
+  include_tasks: dsk-redis-agent.yml
+  when: '"dsk-redis-agent" in datasaker_agents'
+
+- name: "Check dsk-cloudwatch-agent"
+  include_tasks: dsk-cloudwatch-agent.yml
+  when: '"dsk-cloudwatch-agent" in datasaker_agents'
+
+## docker agent ##
+
 - name: "Check dsk-docker-node-agent"
   include_tasks: dsk-docker-node-agent.yml
   when: '"dsk-docker-node-agent" in datasaker_docker_agents'
@@ -70,3 +83,11 @@
 - name: "Check dsk-docker-maria-agent"
   include_tasks: dsk-docker-maria-agent.yml
   when: '"dsk-docker-maria-agent" in datasaker_docker_agents'
+
+- name: "Check dsk-docker-redis-agent"
+  include_tasks: dsk-docker-redis-agent.yml
+  when: '"dsk-docker-redis-agent" in datasaker_agents'
+
+- name: "Check dsk-docker-cloudwatch-agent"
+  include_tasks: dsk-docker-cloudwatch-agent.yml
+  when: '"dsk-docker-cloudwatch-agent" in datasaker_agents'

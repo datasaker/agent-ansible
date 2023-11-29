@@ -158,7 +158,12 @@ ansible-galaxy install dsk_bot.datasaker
 |`maria_database_port`|`maria_database_port`에 Maria port 설정.|`None`|
 |`maria_database_name`|`maria_database_name`에 Maria database 설정.|`None`|
 |`maria_agent_port`|`maria_agent_port`에 Maria agent port 설정.|`9104`|
-
+|`reids_address`|`reids_address`에 redis address 설정.|`-`|
+|`redis_agent_port`|`redis_agent_port`에 redis agent port 설정.|`19121`|
+|`redis_user`|`redis_user`에 redis user 설정. (없을 경우 생략)|`-`|
+|`redis_pass`|`redis_pass`에 redis user password 설정. (없을 경우 생략)|`-`|
+|`aws_access_key_id`|`aws_access_key_id`에 cloudwatch agent 사용을 위한 key id 설정.|`-`|
+|`aws_secret_access_key`|`aws_secret_access_key`에 cloudwatch agent 사용을 위한 access key 설정.|`-`|
 
 #### Ansible Playbook 상세 설정 Example (Linux)
 ```yml

@@ -1,0 +1,32 @@
+---
+- name: "Create datasaker local directory"
+  ansible.builtin.file:
+    path: "{{ item }}"
+    state: directory
+    owner: "{{datasaker_docker_user}}"
+    group: "{{datasaker_docker_group}}"
+    mode: '0755'
+  with_items:
+    - "{{ datasaker_docker_path }}/agent/dsk-redis-agent"
+
+- name: "Create agent config"
+  ansible.builtin.file:
+    path: "{{ datasaker_docker_path }}/dsk-docker-redis-agent-config.yml"
+    state: touch
+
+- name: "Setting dsk-redis-agent config"
+  template:
+    src: redis-agent-config.yml.j2
+    dest: "{{ datasaker_docker_path }}/dsk-docker-redis-agent-config.yml"
+
+- name: "Run Datasaker Redis Agent"
+  ansible.builtin.docker_container:
+    name: dsk-docker-redis-agent
+    image: "datasaker/dsk-redis-agent:{{ redis_agent_image_tag }}"
+    state: started
+    restart_policy: "{{ redis_agent_restart_policy }}"
+    detach: true
+    volumes:
+      - "{{ datasaker_docker_path }}:/var/datasaker/"
+      - "{{ datasaker_docker_global_config }}:/etc/datasaker/global-config.yml:ro"
+      - "{{ datasaker_docker_path }}/dsk-docker-redis-agent-config.yml:/etc/datasaker/dsk-redis-agent/agent-config.yml:ro"
