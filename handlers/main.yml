@@ -55,4 +55,16 @@
   ansible.builtin.systemd:
     name: dsk-plan-maria-agent
     enabled: true
-    state: restarted   
+    state: restarted
+
+- name: Restart dsk-redis-agent service
+  ansible.builtin.systemd:
+    name: dsk-redis-agent
+    enabled: true
+    state: restarted
+
+- name: Restart dsk-cloudwatch-agent service
+  ansible.builtin.systemd:
+    name: dsk-cloudwatch-agent
+    enabled: true
+    state: restarted

@@ -18,9 +18,6 @@
 # - set_fact:
 #     datasaker_agents: "{{ datasaker_agents | reject('equalto', 'dsk-log-agent') | list }}"
 
-- name: "Check datasaker Agent"
-  include_tasks: check-agent.yml
-
 - name: Make Datasaker Log Directory
   ansible.builtin.file:
     path: "{{ datasaker_host_log_path }}/{{ item }}"
@@ -52,6 +49,9 @@
     - Restart {{ item }} service
   ignore_errors: true
 
+- name: "Check datasaker Agent"
+  include_tasks: check-agent.yml
+
 - name: "Setting dsk-log-agent config"
   template:
     src: log-agent-config.yml.j2
@@ -59,3 +59,12 @@
   when: 
     - '"dsk-log-agent" in datasaker_agents'
     - log_agent_image_tag == "latest"
+
+- name: "Restart dsk-agent service"
+  systemd_service:
+    state: restarted
+    name: "{{ item }}"
+    enabled: true
+  with_items:
+    - "{{ datasaker_agents }}"
+  ignore_errors: true

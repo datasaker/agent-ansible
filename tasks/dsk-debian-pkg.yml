@@ -50,9 +50,6 @@
     state: present
     filename: datasaker
 
-- name: "Check datasaker Agent"
-  include_tasks: check-agent.yml
-
 - name: "Install metric sidecar"
   apt:
     name: "dsk-metric-sidecar"
@@ -78,6 +75,9 @@
   with_items:
     - "{{ datasaker_agents }}"
   ignore_errors: true
+
+- name: "Check datasaker Agent"
+  include_tasks: check-agent.yml
 
 - name: "Install datasaker log agent"
   apt:

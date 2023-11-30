@@ -4,7 +4,7 @@ agent:
     cluster_id: "{{ redis_agent_cluster | default('unknown') }}"
   option:
     external_labels:
-      redis: {{ reids_address }}
+      redis: {{ redis_address }}
     exporter_config:
       command: "/usr/bin/dsk-redis-exporter"
       port: {{ redis_agent_port | default('19121') }}

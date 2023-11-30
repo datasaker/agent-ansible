@@ -86,8 +86,8 @@
 
 - name: "Check dsk-docker-redis-agent"
   include_tasks: dsk-docker-redis-agent.yml
-  when: '"dsk-docker-redis-agent" in datasaker_agents'
+  when: '"dsk-docker-redis-agent" in datasaker_docker_agents'
 
 - name: "Check dsk-docker-cloudwatch-agent"
   include_tasks: dsk-docker-cloudwatch-agent.yml
-  when: '"dsk-docker-cloudwatch-agent" in datasaker_agents'
+  when: '"dsk-docker-cloudwatch-agent" in datasaker_docker_agents'
