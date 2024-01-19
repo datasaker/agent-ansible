@@ -101,7 +101,7 @@ ansible-galaxy install dsk_bot.datasaker
 |`node_agent_image_tag`| `dsk-node-agent` Image tag 설정. <br> | `latest`|
 |`trace_agent_image_tag`| `dsk-trace-agent` Image tag 설정. <br> | `latest`|
 |`log_agent_image_tag`| `dsk-log-agent` Image tag 설정. <br> | `latest`|
-|`postgres_agent_image_tag`| `dsk-postgres-agent` Image tag 설정. <br> | `latest`|
+|`postgres_agent_image_tag`| `dsk-postgres-agent` Image tag 설정. <br> | `latest`| -->
 
 ### Datasaker Agent 상세 설정
 - Host Agent 와 Docker Container Agent는 같은 설정값을 사용합니다.
@@ -141,21 +141,24 @@ ansible-galaxy install dsk_bot.datasaker
       agent_name: ''
       agent_cluster: ''
       db:
-        - host: ''
-          port: ''
-          user_name: ''
-          user_password: ''
-          database: ''
-          ssl_skip: ''
-          ssl_ca: ''
-          ssl_cert: ''
-          ssl_key: ''
-          ssl_tls
-          interval_enabled: ''
-          scrape_interval: ''
+        - host: '' # database 호스트의 주소
+          port: '' # database port
+          user_name: '' # database 유저
+          user_password: '' # database 유저 패스워드
+          database: '' # 대상 database
+          ssl_skip: '' # ssl skip 여부 (default : false)
+          ssl_ca: '' # ca 파일 경로
+          ssl_cert: '' # cert 파일 경로
+          ssl_key: '' # key 파일 경로
+          ssl_tls: '' # tls 여부 (default : false)
+          interval_enabled: '' # interval 활성화 여부
+          scrape_interval: '' # scrape interval 설정 (default : 5s)
           append_db:
-            - database: ''
-              long_session: ''
+            - database: '' # 대상 database
+              long_session: '' # long session 설정 (default : 5s)
+              
+# ssl_skip 값이 false 일 경우 ssl_* 변수들 생략 가능
+# interval_enabled 값이 false 일 경우 scrape_interval , append_db 생략 가능
 ```
 
 #### Ansible Playbook 상세 설정 Example (Linux)
