@@ -8,6 +8,20 @@
     - "{{ datasaker_agents }}"
   when: 
     - datasaker_agents
+    - "item != 'dsk-maria-agent' and item != 'dsk-mysql-agent' and item != 'dsk-postgres-agent'"
+  ignore_errors: true
+
+- name: Stop database agent service
+  ansible.builtin.systemd:
+    name: "{{ item }}"
+    enabled: false
+    state: stopped
+  with_items:
+    - "{{ datasaker_agents }}"
+  when: 
+    - datasaker_agents
+    - "item != 'dsk-maria-agent' and item != 'dsk-mysql-agent' and item != 'dsk-postgres-agent'"
+    - "'database' in group_names"
   ignore_errors: true
 
 - name: "Uninstall datasaker agent"
