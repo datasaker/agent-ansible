@@ -48,6 +48,23 @@
     - Reload systemd configuration
     - Restart {{ item }} service
   ignore_errors: true
+  when:
+    - "item != 'dsk-maria-agent' and item != 'dsk-mysql-agent' and item != 'dsk-postgres-agent'"
+
+- name: "Install datasaker database agent"
+  yum:
+    name: "{{ item }}"
+    state: present
+    update_cache: yes
+  with_items:
+    - "{{ datasaker_agents }}"
+  notify:
+    - Reload systemd configuration
+    - Restart {{ item }} service
+  ignore_errors: true
+  when:
+    - "item != 'dsk-maria-agent' and item != 'dsk-mysql-agent' and item != 'dsk-postgres-agent'"
+    - "'database' in group_names"
 
 - name: "Check datasaker Agent"
   include_tasks: check-agent.yml
@@ -68,3 +85,17 @@
   with_items:
     - "{{ datasaker_agents }}"
   ignore_errors: true
+  when:
+    - "item != 'dsk-maria-agent' and item != 'dsk-mysql-agent' and item != 'dsk-postgres-agent'"
+
+- name: "Restart dsk-agent database service"
+  systemd_service:
+    state: restarted
+    name: "{{ item }}"
+    enabled: true
+  with_items:
+    - "{{ datasaker_agents }}"
+  ignore_errors: true
+  when:
+    - "item != 'dsk-maria-agent' and item != 'dsk-mysql-agent' and item != 'dsk-postgres-agent'"
+    - "'database' in group_names"

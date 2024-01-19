@@ -16,27 +16,21 @@
 
 - name: "Check dsk-postgres-agent"
   include_tasks: dsk-postgres-agent.yml
-  when: '"dsk-postgres-agent" in datasaker_agents'
-
-- name: "Check dsk-plan-postgres-agent"
-  include_tasks: dsk-plan-postgres-agent.yml
-  when: '"dsk-plan-postgres-agent" in datasaker_agents'
+  when: 
+    - '"dsk-postgres-agent" in datasaker_agents'
+    - '"database" in group_names'
 
 - name: "Check dsk-mysql-agent"
   include_tasks: dsk-mysql-agent.yml
-  when: '"dsk-mysql-agent" in datasaker_agents'
-
-- name: "Check dsk-plan-mysql-agent"
-  include_tasks: dsk-plan-mysql-agent.yml
-  when: '"dsk-plan-mysql-agent" in datasaker_agents'
+  when: 
+    - '"dsk-mysql-agent" in datasaker_agents'
+    - '"database" in group_names'
 
 - name: "Check dsk-maria-agent"
   include_tasks: dsk-maria-agent.yml
-  when: '"dsk-maria-agent" in datasaker_agents'
-
-- name: "Check dsk-plan-maria-agent"
-  include_tasks: dsk-plan-maria-agent.yml
-  when: '"dsk-plan-maria-agent" in datasaker_agents'
+  when: 
+    - '"dsk-maria-agent" in datasaker_agents'
+    - '"database" in group_names'
 
 - name: "Check dsk-redis-agent"
   include_tasks: dsk-redis-agent.yml

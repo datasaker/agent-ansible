@@ -1,19 +1,28 @@
 agent:
   metadata:
-    agent_name: "{{ postgres_agent_name | default('dsk-postgres-agent') }}"
-  option:
-    exporter_config:
-      command: "/usr/bin/dsk-postgres-exporter"
-      port: 19187
-      args:
-        - --extend.query-path=/etc/datasaker/dsk-postgres-agent/queries.yaml
-        - --data-source-user={{ postgres_user_name | default('') }}
-        - --data-source-pass={{ postgres_user_password | default('') }}
-        - --data-source-uri={{ postgres_database_address | default('') }}":"{{ postgres_database_port | default('') }}
-    scrape_interval: 15s
-    scrape_timeout: 5s
-    scrape_configs:
-      - job_name: dsk-postgres-agent
-        url: localhost:19187
-        filtering_configs:
-          rule: drop
+    agent_name: "{{ postgres.agent_name | default('dsk-postgres-agent') }}"
+    cluster_id: "{{ postgres.agent_cluster | default('datasaker') }}"
+  instances:
+{% for agent_setting in postgres.db %}
+  - username: {{ agent_setting.user_name | default('') }}
+    password: {{ agent_setting.user_password | default('') }}
+    host: {{ agent_setting.host | default('') }}
+    port: {{ agent_setting.port | default('') }}
+    ssl-skip-verfication: {{ agent_setting.ssl_skip | default('false') }}
+{% if agent_setting.ssl_skip == 'true' %}
+    ssl-ca: {{ agent_setting.ssl_ca | default('/tmp/ssl/ca.crt') }}
+    ssl-cert: {{ agent_setting.ssl_cert | default('/tmp/ssl/cert.crt') }}
+    ssl-key: {{ agent_setting.ssl_key | default('/tmp/ssl/key.key') }}
+    tls: {{ agent_setting.ssl_tls | default('false') }}
+{% endif %}
+    dbname: {{ agent_setting.database | default('') }}
+{% if agent_setting.interval_enabled %}
+    append_session:
+      scrape_interval: {{ agent_setting.scrape_interval | default('5s') }}
+      db_list:
+{% for long_setting in agent_setting.append_db %}
+      - dbname: {{ long_setting.database | default('') }}
+        long_session_standard: {{ long_setting.long_session | default('5s') }}
+{% endfor %}
+{% endif %}
+{% endfor -%}

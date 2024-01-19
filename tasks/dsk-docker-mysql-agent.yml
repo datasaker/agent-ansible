@@ -8,7 +8,6 @@
     mode: '0755'
   with_items:
     - "{{ datasaker_docker_path }}/agent/dsk-mysql-agent"
-    - "{{ datasaker_docker_path }}/agent/dsk-plan-mysql-agent"
 
 - name: "Create agent config"
   ansible.builtin.file:
@@ -19,16 +18,6 @@
   template:
     src: docker-mysql-agent-config.yml.j2
     dest: "{{ datasaker_docker_path }}/dsk-docker-mysql-config.yml"
-
-- name: "Create agent config"
-  ansible.builtin.file:
-    path: "{{ datasaker_docker_path }}/dsk-docker-plan-mysql-config.yml"
-    state: touch
-
-- name: "Setting plan-dsk-mysql-agent config"
-  template:
-    src: docker-plan-mysql-agent-config.yml.j2
-    dest: "{{ datasaker_docker_path }}/dsk-docker-plan-mysql-config.yml"
 
 - name: "Run dsk-mysql-agent container"
   docker_container:
@@ -43,17 +32,3 @@
       - "{{ datasaker_docker_path }}:/var/datasaker/"
       - "{{ datasaker_docker_global_config }}:/etc/datasaker/global-config.yml:ro"
       - "{{ datasaker_docker_path }}/dsk-docker-mysql-config.yml:/etc/datasaker/dsk-mysql-agent/agent-config.yml:ro"
-
-- name: "Run dsk-plan-mysql-agent container"
-  docker_container:
-    name: dsk-docker-plan-mysql-agent
-    image: "datasaker/dsk-plan-mysql-agent:{{ plan_mysql_agent_image_tag }}"
-    state: started
-    restart_policy: "{{ plan_mysql_agent_restart_policy }}"
-    detach: true
-    env:
-      DKS_LOG_LEVEL: "info"
-    volumes:
-      - "{{ datasaker_docker_path }}:/var/datasaker/"
-      - "{{ datasaker_docker_global_config }}:/etc/datasaker/global-config.yml:ro"
-      - "{{ datasaker_docker_path }}/dsk-docker-plan-mysql-config.yml:/etc/datasaker/dsk-plan-mysql-agent/agent-config.yml:ro"

@@ -75,6 +75,20 @@
   with_items:
     - "{{ datasaker_agents }}"
   ignore_errors: true
+  when:
+    - "item != 'dsk-maria-agent' and item != 'dsk-mysql-agent' and item != 'dsk-postgres-agent'"
+
+- name: "Install datasaker database agent"
+  apt:
+    name: "{{ item }}"
+    state: latest
+    update_cache: yes
+  with_items:
+    - "{{ datasaker_agents }}"
+  ignore_errors: true
+  when:
+    - "item != 'dsk-maria-agent' and item != 'dsk-mysql-agent' and item != 'dsk-postgres-agent'"
+    - "'database' in group_names"
 
 - name: "Check datasaker Agent"
   include_tasks: check-agent.yml
@@ -100,3 +114,17 @@
   with_items:
     - "{{ datasaker_agents }}"
   ignore_errors: true
+  when:
+    - "item != 'dsk-maria-agent' and item != 'dsk-mysql-agent' and item != 'dsk-postgres-agent'"
+
+- name: "Restart dsk-database-agent service"
+  ansible.builtin.systemd:
+    name: "{{ item }}"
+    enabled: true
+    state: restarted
+  with_items:
+    - "{{ datasaker_agents }}"
+  ignore_errors: true
+  when:
+    - "item != 'dsk-maria-agent' and item != 'dsk-mysql-agent' and item != 'dsk-postgres-agent'"
+    - "'database' in group_names"
