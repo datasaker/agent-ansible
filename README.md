@@ -124,10 +124,6 @@ ansible-galaxy install dsk_bot.datasaker
 |`logs[*].collect.file.paths`|로그 수집 대상 경로 설정. 예 : /var/log/sample/*.log.|`['/var/log/*.log']`|
 |`logs[*].collect.file.exclude_paths`|로그 수집 제외 대상 경로 설정.|`None`|
 |`custom_log_volume`| Docker 사용 시 수집할 로그가 있는 경로 마운트.|`/var/lib/docker/containers/`|
-|`postgres_user_name`| `dsk-postgres-agent`에 Postgres user ID 설정. <br> | `None` |
-|`postgres_user_password`| `dsk-postgres-agent`에 Postgres user password 설정. <br> | `None` |
-|`postgres_database_address`| `dsk-postgres-agent`에 Postgres address 설정. <br> | `None` |
-|`postgres_database_port`| `dsk-postgres-agent`에 Postgres port 설정. <br> | `None` |
 |`reids_address`|`reids_address`에 redis address 설정.|`-`|
 |`redis_agent_port`|`redis_agent_port`에 redis agent port 설정.|`19121`|
 |`redis_user`|`redis_user`에 redis user 설정. (없을 경우 생략)|`-`|
