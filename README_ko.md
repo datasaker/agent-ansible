@@ -68,9 +68,6 @@ ansible-galaxy install dsk_bot.datasaker
 |`datagate_metric_url`| `dsk-metric-agent` Datagate URL 설정. <br>| `datagate_url`|
 |`datagate_metric_port`| `dsk-metric-agent` Datagate Port 설정. <br>| `31302`|
 |`datagate_metric_timeout`| `dsk-metric-agent` Data 전송 만료 시간 설정. <br>| `5s`|
-|`datagate_plan_url`| `dsk-plan-agent` Datagate URL 설정. <br>| `datagate_url`|
-|`datagate_plan_port`| `dsk-plan-agent` Datagate Port 설정. <br>| `31303`|
-|`datagate_plan_timeout`| `dsk-plan-agent` Data 전송 만료 시간 설정. <br>| `5s`|
 |`datagate_loggate_url`| `dsk-log-agent` Datagate URL 설정. <br>| `datagate_url`|
 |`datagate_loggate_port`| `dsk-log-agent` Datagate Port 설정. <br>| `31304`|
 |`datagate_loggate_timeout`| `dsk-log-agent` Data 전송 만료 시간 설정. <br>| `5s`|
@@ -90,13 +87,11 @@ ansible-galaxy install dsk_bot.datasaker
 |`trace_agent_restart_policy`|  `dsk-trace-agent` Container Restart Policy 설정. <br> | `always`|
 |`log_agent_restart_policy`|  `dsk-log-agent` Container Restart Policy 설정. <br> | `always`|
 |`postgres_agent_restart_policy`|  `dsk-postgres-agent` Container Restart Policy 설정. <br> | `always`|
-|`plan_postgres_agent_restart_policy`|  `dsk-plan-postgres-agent` Container Restart Policy 설정. <br> | `always`|
 |`container_agent_log_level`| `dsk-container-agent` Log Level 설정. <br> | `INFO`|
 |`node_agent_log_level`| `dsk-node-agent` Log Level 설정. <br> | `INFO`|
 |`trace_agent_log_level`| `dsk-trace-agent` Log Level 설정. <br> | `INFO`|
 |`log_agent_log_level`| `dsk-log-agent` Log Level 설정. <br> | `INFO`|
 |`postgres_agent_log_level`| `dsk-postgres-agent` Log Level 설정. <br> | `INFO`|
-|`plan_postgres_agent_log_level`| `dsk-plan-postgres-agent` Log Level 설정. <br> | `INFO`|
 
 <!--|`datasaker_docker_user`| Datasaker Docker Container Directory Ownership 설정. <br> | `datasaker`|
 |`datasaker_docker_group`| Datasaker Docker Container Directory Group 설정. <br> | `datasaker`|
@@ -107,7 +102,6 @@ ansible-galaxy install dsk_bot.datasaker
 |`trace_agent_image_tag`| `dsk-trace-agent` Image tag 설정. <br> | `latest`|
 |`log_agent_image_tag`| `dsk-log-agent` Image tag 설정. <br> | `latest`|
 |`postgres_agent_image_tag`| `dsk-postgres-agent` Image tag 설정. <br> | `latest`|
-|`plan_postgres_agent_image_tag`| `dsk-plan-postgres-agent` Image tag 설정. <br> | `latest`|-->
 
 ### Datasaker Agent 상세 설정
 - Host Agent 와 Docker Container Agent는 같은 설정값을 사용합니다.
@@ -134,36 +128,35 @@ ansible-galaxy install dsk_bot.datasaker
 |`postgres_user_password`| `dsk-postgres-agent`에 Postgres user password 설정. <br> | `None` |
 |`postgres_database_address`| `dsk-postgres-agent`에 Postgres address 설정. <br> | `None` |
 |`postgres_database_port`| `dsk-postgres-agent`에 Postgres port 설정. <br> | `None` |
-|`plan_postgres_user_name`| `dsk-plan-postgres-agent`에 Plan Postgres user ID 설정. <br> | `None` |
-|`plan_postgres_user_password`| `dsk-plan-postgres-agent`에 Plan Postgres user password 설정. <br> | `None` |
-|`plan_postgres_database_address`| `dsk-plan-postgres-agent`에 Plan Postgres address 설정. <br> | `None` |
-|`plan_postgres_database_port`| `dsk-plan-postgres-agent`에 Plan Postgres port 설정. <br> | `None` |
-|`plan_postgres_database_name`| `dsk-plan-postgres-agent`에 Plan Postgres database 설정. <br> | `None` |
-|`plan_postgres_scrape_interval`| `dsk-plan-postgres-agent`에 Plan Postgres scrape interval 설정. <br> | `30s` |
-|`plan_postgres_scrape_timeout`| `dsk-plan-postgres-agent`에 Plan Postgres scrape timeout 설정. <br> | `5s` |
-|`plan_postgres_slow_query_standard`| `dsk-plan-postgres-agent`에 Plan Postgres slow query standard 설정. <br> | `5s` |
-|`plan_postgres_executor_number`| `dsk-plan-postgres-agent`에 Plan Postgres executor number 설정. <br> | `10` |
-|`plan_postgres_sender_number`| `dsk-plan-postgres-agent`에 Plan Postgres sender number 설정. <br> | `10` |
-|`plan_postgres_activity_query_buffer`| `dsk-plan-postgres-agent`에 Plan Postgres activity query buffer 설정. <br> | `50` |
-|`plan_postgres_plan_sender_buffer`| `dsk-plan-postgres-agent`에 Plan Postgres plan sender buffer 설정. <br> | `50` |
-|`mysql_user_name`|`mysql_user_name`에 Mysql user ID 설정.|`None`|
-|`mysql_user_password`|`mysql_user_password`에 Mysql user password 설정.|`None`|
-|`mysql_database_address`|`mysql_database_address`에 Mysql address 설정.|`None`|
-|`mysql_database_port`|`mysql_database_port`에 Mysql port 설정.|`None`|
-|`mysql_database_name`|`mysql_database_name`에 Mysql database 설정.|`None`|
-|`mysql_agent_port`|`mysql_agent_port`에 Mysql agent port 설정.|`9104`|
-|`maria_user_name`|`maria_user_name`에 Maria user ID 설정.|`None`|
-|`maria_user_password`|`maria_user_password`에 Maria user password 설정.|`None`|
-|`maria_database_address`|`maria_database_address`에 Maria address 설정.|`None`|
-|`maria_database_port`|`maria_database_port`에 Maria port 설정.|`None`|
-|`maria_database_name`|`maria_database_name`에 Maria database 설정.|`None`|
-|`maria_agent_port`|`maria_agent_port`에 Maria agent port 설정.|`9104`|
 |`reids_address`|`reids_address`에 redis address 설정.|`-`|
 |`redis_agent_port`|`redis_agent_port`에 redis agent port 설정.|`19121`|
 |`redis_user`|`redis_user`에 redis user 설정. (없을 경우 생략)|`-`|
 |`redis_pass`|`redis_pass`에 redis user password 설정. (없을 경우 생략)|`-`|
 |`aws_access_key_id`|`aws_access_key_id`에 cloudwatch agent 사용을 위한 key id 설정.|`-`|
 |`aws_secret_access_key`|`aws_secret_access_key`에 cloudwatch agent 사용을 위한 access key 설정.|`-`|
+|database|모든 database agent에 사용되는 공통 변수 (아래 참고)|`-`|
+
+```yaml
+    maria: # maria or mysql or postgres
+      agent_name: ''
+      agent_cluster: ''
+      db:
+        - host: ''
+          port: ''
+          user_name: ''
+          user_password: ''
+          database: ''
+          ssl_skip: ''
+          ssl_ca: ''
+          ssl_cert: ''
+          ssl_key: ''
+          ssl_tls
+          interval_enabled: ''
+          scrape_interval: ''
+          append_db:
+            - database: ''
+              long_session: ''
+```
 
 #### Ansible Playbook 상세 설정 Example (Linux)
 ```yml
@@ -173,20 +166,22 @@ ansible-galaxy install dsk_bot.datasaker
     - role: dsk_bot.datasaker
   vars:
     datasaker_api_key: "<YOUR_API_KEY>"
-    datasaker_agents:
-      - "dsk-node-agent"
-      - "dsk-trace-agent"
-      - "dsk-log-agent"
-      - "dsk-postgres-agent"
-    postgres_user_name: sample
-    postgres_user_password: 1q2w3e4r
-    postgres_database_address: 0.0.0.0
-    postgres_database_port: 5432
-    plan_postgres_user_name: sample
-    plan_postgres_user_password: 1q2w3e4r
-    plan_postgres_database_address: 0.0.0.0
-    plan_postgres_database_name: sample
-    plan_postgres_database_port: 5432
+    datasaker_agents: ["dsk-node-agent","dsk-maria-agent","dsk-log-agent"]
+    maria:
+      agent_name: ''
+      agent_cluster: ''
+      db:
+        - host: ''
+          port: ''
+          user_name: ''
+          user_password: ''
+          database: ''
+          ssl_skip: ''
+          interval_enabled: ''
+          scrape_interval: ''
+          append_db:
+            - database: ''
+              long_session: ''
     logs:
     - collect:
         type: file
@@ -203,20 +198,22 @@ ansible-galaxy install dsk_bot.datasaker
     - role: dsk_bot.datasaker
   vars:
     datasaker_api_key: "<YOUR_API_KEY>"
-    datasaker_docker_agents:
-    - "dsk-docker-node-agent"
-    - "dsk-docker-trace-agent"
-    - "dsk-docker-log-agent"
-    - "dsk-docker-postgres-agent"
-    postgres_user_name: sample
-    postgres_user_password: 1q2w3e4r
-    postgres_database_address: 0.0.0.0
-    postgres_database_port: 5432
-    plan_postgres_user_name: sample
-    plan_postgres_user_password: 1q2w3e4r
-    plan_postgres_database_address: 0.0.0.0
-    plan_postgres_database_name: sample
-    plan_postgres_database_port: 5432
+    datasaker_agents: ["dsk-node-agent","dsk-maria-agent","dsk-log-agent"]
+    maria:
+      agent_name: ''
+      agent_cluster: ''
+      db:
+        - host: ''
+          port: ''
+          user_name: ''
+          user_password: ''
+          database: ''
+          ssl_skip: ''
+          interval_enabled: ''
+          scrape_interval: ''
+          append_db:
+            - database: ''
+              long_session: ''
     logs:
     - collect:
         type: file
