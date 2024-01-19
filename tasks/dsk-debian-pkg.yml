@@ -87,7 +87,7 @@
     - "{{ datasaker_agents }}"
   ignore_errors: true
   when:
-    - "item != 'dsk-maria-agent' and item != 'dsk-mysql-agent' and item != 'dsk-postgres-agent'"
+    - "item == 'dsk-maria-agent' or item == 'dsk-mysql-agent' or item == 'dsk-postgres-agent'"
     - "'database' in group_names"
 
 - name: "Check datasaker Agent"
@@ -126,5 +126,5 @@
     - "{{ datasaker_agents }}"
   ignore_errors: true
   when:
-    - "item != 'dsk-maria-agent' and item != 'dsk-mysql-agent' and item != 'dsk-postgres-agent'"
+    - "item == 'dsk-maria-agent' or item == 'dsk-mysql-agent' or item == 'dsk-postgres-agent'"
     - "'database' in group_names"
