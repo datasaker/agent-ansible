@@ -134,7 +134,7 @@ ansible-galaxy install dsk_bot.datasaker
 |`redis_pass`|`redis_pass`에 redis user password 설정. (없을 경우 생략)|`-`|
 |`aws_access_key_id`|`aws_access_key_id`에 cloudwatch agent 사용을 위한 key id 설정.|`-`|
 |`aws_secret_access_key`|`aws_secret_access_key`에 cloudwatch agent 사용을 위한 access key 설정.|`-`|
-|database|모든 database agent에 사용되는 공통 변수 (아래 참고)|`-`|
+|`database`|모든 database agent에 사용되는 공통 변수 (아래 참고)|`-`|
 
 ```yaml
     maria: # maria or mysql or postgres
@@ -156,7 +156,7 @@ ansible-galaxy install dsk_bot.datasaker
           append_db:
             - database: '' # 대상 database
               long_session: '' # long session 설정 (default : 5s)
-              
+
 # ssl_skip 값이 false 일 경우 ssl_* 변수들 생략 가능
 # interval_enabled 값이 false 일 경우 scrape_interval , append_db 생략 가능
 ```
