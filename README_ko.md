@@ -197,7 +197,7 @@ ansible-galaxy install dsk_bot.datasaker
     - role: dsk_bot.datasaker
   vars:
     datasaker_api_key: "<YOUR_API_KEY>"
-    datasaker_agents: ["dsk-node-agent","dsk-maria-agent","dsk-log-agent"]
+    datasaker_docker_agents: ["dsk-node-agent","dsk-maria-agent","dsk-log-agent"]
     maria:
       agent_name: ''
       agent_cluster: ''
